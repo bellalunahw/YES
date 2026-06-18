@@ -3,189 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YES DESIGN | 프리미엄 인테리어 디자인</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
-        
-        :root {
-            --color-bg-mi: #FAF7EC;
-            --color-yes-orange: #E86624;
-            --font-main: 'Noto Sans KR', sans-serif;
-        }
-
-        body {
-            font-family: var(--font-main);
-            background-color: var(--color-bg-mi) !important;
-            color: #222222;
-            overflow-x: hidden;
-            margin: 0; padding: 0;
-            -webkit-text-size-adjust: none;
-        }
-
-        /* [HOME 모드 헤더] */
-        header.main-home-mode {
-            position: relative !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 2.5rem 0 0 0 !important;
-            background-color: var(--color-bg-mi) !important;
-        }
-        
-        header.main-home-mode .logo-img { height: 80px !important; width: auto !important; }
-        
-        header.main-home-mode nav {
-            width: 100% !important;
-            background-color: var(--color-yes-orange) !important;
-            display: flex !important;
-            justify-content: center !important;
-            padding: 14px 10px !important;
-            flex-wrap: wrap;
-        }
-        
-        header.main-home-mode .menu-item {
-            color: #ffffff !important;
-            margin: 0 1.8rem !important;
-            font-size: 1.05rem !important;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        /* [SUB 모드 헤더] */
-        header.sub-page-mode {
-            position: fixed !important;
-            top: 0; left: 0; right: 0; z-index: 50;
-            display: flex !important;
-            flex-direction: row !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            padding: 0.8rem 5% !important;
-            background-color: rgba(250, 247, 236, 0.98) !important;
-            border-bottom: 1px solid rgba(0,0,0,0.06) !important;
-        }
-        header.sub-page-mode .logo-img { height: 38px !important; }
-        header.sub-page-mode .menu-item { color: #333333 !important; margin-left: 1.5rem !important; font-size: 0.95rem !important; }
-
-        .page-view { display: none; background-color: var(--color-bg-mi) !important; }
-        .page-view.active { display: block; }
-        .sub-padding { padding-top: 110px; }
-        .image-card { background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
-        .kakao-float { position: fixed; bottom: 25px; right: 25px; width: 56px; height: 56px; background-color: #FEE500; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); z-index: 999; cursor: pointer; }
-    </style>
+    <title>Artemis Arch | Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 구글 폰트 연결 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header id="main-header" class="main-home-mode">
-        <div class="logo-container cursor-pointer" onclick="showPage('home')">
-            <img src="img/logo.png?v=2026" class="logo-img" alt="YES DESIGN">
-        </div>
+    <!-- 헤더 / 내비게이션 -->
+    <header>
+        <div class="logo">ARTEMIS ARCH</div>
         <nav>
-            <span class="menu-item" onclick="showPage('about')">회사소개</span>
-            <span class="menu-item" onclick="showPage('location')">오시는길</span>
-            <span class="menu-item" onclick="showPage('portfolio')">시공사례</span>
-            <span class="menu-item" onclick="showPage('contact')">문의하기</span>
+            <a href="#about">ABOUT</a>
+            <a href="#projects">PROJECTS</a>
+            <a href="#contact">CONTACT</a>
         </nav>
     </header>
 
-    <main id="page-home" class="page-view active">
-        <section class="hero-section px-4 min-h-[50vh] flex flex-col justify-center items-center text-center">
-            <h1 id="db-main-title" class="text-3xl md:text-5xl font-bold mb-4">공간에 가치를 더하다</h1>
-            <p id="db-main-sub" class="text-base md:text-xl text-[#666666]">YES DESIGN이 제안하는 프리미엄 인테리어 디자인</p>
-        </section>
-    </main>
-
-    <div id="page-about" class="page-view sub-padding max-w-4xl mx-auto px-6 py-12">
-        <h2 class="text-3xl font-bold mb-8 border-b-2 pb-3 border-[#E86624]">ABOUT US</h2>
-        <div id="db-about-text" class="text-gray-700 leading-relaxed whitespace-pre-wrap">예스디자인은 고객의 라이프스타일과 공간의 본질을 연구하여, 가장 아름답고 효율적인 공간 정체성을 제안합니다.</div>
-    </div>
-
-    <div id="page-location" class="page-view sub-padding max-w-4xl mx-auto px-6 py-12">
-        <h2 class="text-3xl font-bold mb-6 border-b-2 pb-3 border-[#E86624]">LOCATION</h2>
-        <div class="bg-white p-5 rounded-xl shadow-sm mb-8 border border-gray-100 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-[#E86624]"><i class="fas fa-map-marker-alt"></i></div>
-            <div>
-                <p class="text-xs text-gray-400">본사 주소</p>
-                <p class="text-lg font-bold">경기도 고양시 덕양구 호수로 76-14, B층1호</p>
+    <!-- 메인 상단 (Hero Section) -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1>We Provide<br>the Essential Value</h1>
+                <p>공간의 본질적인 가치를 담아내는 상업 공간 설계 및 브랜딩을 지향합니다.</p>
+            </div>
+            <div class="hero-image">
+                <!-- 깃허브에 있는 logo.png나 메인 이미지를 연결해보세요 -->
+                <img src="logo.png" alt="Main Image">
             </div>
         </div>
-        <a id="db-map-url" href="#" target="_blank" class="block w-full bg-[#E86624] text-white text-center py-4 rounded-lg font-bold">네이버 지도에서 위치 보기</a>
-    </div>
+    </section>
 
-    <div id="page-portfolio" class="page-view sub-padding max-w-6xl mx-auto px-6 py-12">
-        <div class="flex justify-between items-center mb-8 border-b-2 pb-3 border-[#E86624]">
-            <h2 class="text-3xl font-bold">PORTFOLIO</h2>
-            <button id="admin-add-btn" class="hidden bg-[#E86624] text-white px-4 py-2 rounded-lg" onclick="openUploadModal()">추가</button>
+    <!-- 포트폴리오 그리드 섹션 -->
+    <section id="projects" class="portfolio-section">
+        <div class="section-title">
+            <h2>OUR PROJECTS</h2>
+            <p>공간 설계, 디자인 시안 및 브랜딩 프로젝트</p>
         </div>
-        <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </div>
-
-    <div id="page-contact" class="page-view sub-padding max-w-5xl mx-auto px-6 py-12">
-        <h2 class="text-3xl font-bold mb-8 border-b-2 pb-3 border-[#E86624]">CONTACT US</h2>
-        <form id="contact-form" class="bg-white p-8 rounded-xl shadow-sm border space-y-4" onsubmit="submitConsult(event)">
-            <input type="text" id="consult-name" placeholder="성함/회사명" required class="w-full px-3 py-2 border rounded-lg">
-            <input type="tel" id="consult-tel" placeholder="연락처" required class="w-full px-3 py-2 border rounded-lg">
-            <textarea id="consult-memo" placeholder="상담 내용" rows="4" required class="w-full px-3 py-2 border rounded-lg"></textarea>
-            <button type="submit" class="w-full bg-[#E86624] text-white py-3 rounded-lg font-bold">상담 신청하기</button>
-        </form>
-    </div>
-
-    <div id="admin-panel" class="hidden fixed bottom-5 left-5 bg-black/90 text-white p-5 rounded-xl z-50 text-xs">
-        <h3 class="text-orange-400 mb-3 font-bold">관리자 모드</h3>
-        <input type="text" id="input-main-title" class="w-full bg-white/10 p-1 mb-1 rounded" placeholder="메인 타이틀">
-        <button onclick="saveAllText()" class="w-full bg-blue-600 mt-2 py-1 rounded">저장</button>
-        <button onclick="closeAdmin()" class="w-full mt-2 text-gray-400">닫기</button>
-    </div>
-
-    <div onclick="triggerAdmin()" class="fixed bottom-2 right-2 text-gray-200 cursor-pointer text-[8px]">●</div>
-
-    <script>
-        const firebaseConfig = { databaseURL: "https://yesdesign-e3e26-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        let currentAdmin = false;
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page-view').forEach(v => v.classList.remove('active'));
-            document.getElementById('page-' + pageId).classList.add('active');
-            const header = document.getElementById('main-header');
-            header.className = (pageId === 'home') ? 'main-home-mode' : 'sub-page-mode';
-            window.scrollTo(0,0);
-        }
-
-        // 데이터 동기화
-        database.ref('site_content').on('value', (s) => {
-            const data = s.val();
-            if(data) {
-                if(data.mainTitle) document.getElementById('db-main-title').innerText = data.mainTitle;
-                if(data.mapUrl) document.getElementById('db-map-url').href = data.mapUrl;
-            }
-        });
-
-        // 관리자 인증
-        function triggerAdmin() {
-            if (prompt("관리자 비밀번호") === "##joo1207") {
-                currentAdmin = true;
-                document.getElementById('admin-panel').classList.remove('hidden');
-                document.getElementById('admin-add-btn').classList.remove('hidden');
-                alert("관리자 모드 활성화");
-            }
-        }
         
-        function saveAllText() {
-            database.ref('site_content').update({
-                mainTitle: document.getElementById('input-main-title').value
-            }).then(() => alert("저장됨"));
-        }
+        <div class="portfolio-grid">
+            <!-- 각 이미지 아이템 (추후 실제 이미지 파일명으로 변경 가능) -->
+            <div class="grid-item tall"><img src="logo.png" alt="Project 1"></div>
+            <div class="grid-item"><img src="logo.png" alt="Project 2"></div>
+            <div class="grid-item"><img src="logo.png" alt="Project 3"></div>
+            <div class="grid-item wide"><img src="logo.png" alt="Project 4"></div>
+            <div class="grid-item"><img src="logo.png" alt="Project 5"></div>
+            <div class="grid-item tall"><img src="logo.png" alt="Project 6"></div>
+        </div>
+    </section>
 
-        function closeAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
-        function openUploadModal() { document.getElementById('upload-modal').classList.remove('hidden'); }
-        function closeUploadModal() { document.getElementById('upload-modal').classList.add('hidden'); }
-    </script>
+    <!-- 푸터 -->
+    <footer>
+        <p>&copy; 2026 ARTEMIS ARCH. All Rights Reserved.</p>
+    </footer>
+
 </body>
 </html>
