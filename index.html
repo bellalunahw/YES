@@ -35,60 +35,20 @@
         </div>
     </section>
 
-    <!-- 포트폴리오 그리드 섹션 -->
+    <!-- 포트폴리오 그리드 섹션 (노션 연동형) -->
     <section id="projects" class="portfolio-section">
         <div class="section-title">
             <h2>OUR PROJECTS</h2>
-            <p>예스디자인이 진행한 대표 프로젝트 실적</p>
+            <p>노션 관리자 모드에서 실시간으로 동기화되는 프로젝트 실적입니다.</p>
         </div>
         
-        <div class="portfolio-grid">
-            <div class="grid-item tall">
-                <img src="project1.jpg" alt="Commercial Space">
-                <div class="item-overlay">
-                    <h4>Commercial Space</h4>
-                    <p>인테리어 설계 및 시공</p>
-                </div>
-            </div>
-            <div class="grid-item">
-                <img src="project2.jpg" alt="F&B Space">
-                <div class="item-overlay">
-                    <h4>F&B Space</h4>
-                    <p>공간 기획 & 디자인 시안</p>
-                </div>
-            </div>
-            <div class="grid-item">
-                <img src="project3.jpg" alt="Office Design">
-                <div class="item-overlay">
-                    <h4>Office Design</h4>
-                    <p>레이아웃 플래닝 및 설계</p>
-                </div>
-            </div>
-            <div class="grid-item wide">
-                <img src="project4.jpg" alt="Exhibition">
-                <div class="item-overlay">
-                    <h4>Exhibition & Display</h4>
-                    <p>브랜드 전시 가구 및 연출</p>
-                </div>
-            </div>
-            <div class="grid-item">
-                <img src="project5.jpg" alt="Branding">
-                <div class="item-overlay">
-                    <h4>Branding & Detail</h4>
-                    <p>크리에이티브 디렉션</p>
-                </div>
-            </div>
-            <div class="grid-item tall">
-                <img src="project6.jpg" alt="Recent Work">
-                <div class="item-overlay">
-                    <h4>Recent Work</h4>
-                    <p>종합 인테리어 솔루션</p>
-                </div>
-            </div>
+        <!-- 노션에서 가져온 데이터가 여기에 자동으로 생성됩니다 -->
+        <div class="portfolio-grid" id="notion-portfolio-grid">
+            <div class="loading-text" style="color:#777; font-weight:300;">프로젝트를 불러오는 중입니다...</div>
         </div>
     </section>
 
-    <!-- 컨택 섹션 (새로 추가됨) -->
+    <!-- 컨택 섹션 -->
     <section id="contact" class="contact-section">
         <div class="contact-container">
             <div class="contact-title">
@@ -98,15 +58,15 @@
             <div class="contact-info-right">
                 <div class="info-row">
                     <span class="label">EMAIL</span>
-                    <span class="value">your-email@example.com</span>
+                    <span class="value">contact@yesdesign.com</span>
                 </div>
                 <div class="info-row">
                     <span class="label">TEL</span>
-                    <span class="value">02-XXXX-XXXX</span>
+                    <span class="value">02-1234-5678</span>
                 </div>
                 <div class="info-row">
                     <span class="label">OFFICE</span>
-                    <span class="value">서울특별시 (지명원 주소 기재 가능)</span>
+                    <span class="value">서울특별시 강남구 ... (상세 주소 입력)</span>
                 </div>
             </div>
         </div>
@@ -121,5 +81,57 @@
         <p class="copyright">&copy; 2026 YES DESIGN. All Rights Reserved.</p>
     </footer>
 
+    <!-- 💡 노션 데이터를 실시간으로 가공하여 그리드를 채워주는 마법의 스크립트 -->
+    <script>
+        // ⚠️ 아래 주소의 'YOUR_NOTION_PAGE_ID_HERE' 부분에 복사하신 노션 페이지 ID(32자리 영문/숫자 코드)를 넣어주세요!
+        const NOTION_PAGE_ID = "https://www.notion.so/3833f0ef5f6c807899ffef6e13a3a959?v=3833f0ef5f6c808d8a80000c12b7267c&source=copy_link"; 
+        const API_URL = `https://notion-api.splitbee.io/v1/table/${NOTION_PAGE_ID}`;
+
+        async function fetchPortfolio() {
+            const gridContainer = document.getElementById('notion-portfolio-grid');
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                if (!data || data.length === 0) {
+                    gridContainer.innerHTML = "<p style='color:#777;'>등록된 프로젝트가 없습니다.</p>";
+                    return;
+                }
+
+                gridContainer.innerHTML = ""; // 로딩 문구 제거
+
+                // 노션 데이터를 반복문 돌면서 그리드 아이템 생성
+                data.forEach((project, index) => {
+                    const item = document.createElement('div');
+                    item.classList.add('grid-item');
+                    
+                    // 감각적인 비대칭 그리드를 위해 1번째와 4번째 아이템에 각각 tall, wide 효과 부여
+                    if (index % 5 === 0) item.classList.add('tall');
+                    if (index % 5 === 3) item.classList.add('wide');
+
+                    // 노션의 Image 컬럼에서 첫 번째 사진 파일 URL 추출
+                    const imageUrl = project.Image && project.Image[0] ? project.Image[0].url : 'logo.png';
+                    const title = project.이름 || 'Untitled';
+                    const desc = project.Description || '';
+
+                    item.innerHTML = `
+                        <img src="${imageUrl}" alt="${title}">
+                        <div class="item-overlay">
+                            <h4>${title}</h4>
+                            <p>${desc}</p>
+                        </div>
+                    `;
+                    gridContainer.appendChild(item);
+                });
+
+            } catch (error) {
+                console.error("노션 데이터 호출 실패:", error);
+                gridContainer.innerHTML = "<p style='color:#777;'>데이터를 불러오는 중 오류가 발생했습니다.</p>";
+            }
+        }
+
+        // 페이지 로드 시 즉시 실행
+        fetchPortfolio();
+    </script>
 </body>
 </html>
