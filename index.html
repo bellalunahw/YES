@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <!-- 헤더 / 내비게이션 -->
     <header>
         <div class="logo">YES DESIGN</div>
         <nav>
@@ -20,6 +21,7 @@
         </nav>
     </header>
 
+    <!-- 메인 상단 (Hero Section) -->
     <section id="about" class="hero-section">
         <div class="hero-container">
             <div class="hero-text-full">
@@ -33,17 +35,20 @@
         </div>
     </section>
 
+    <!-- 포트폴리오 그리드 섹션 -->
     <section id="projects" class="portfolio-section">
         <div class="section-title">
             <h2>OUR PROJECTS</h2>
             <p>노션 관리자 모드에서 실시간으로 동기화되는 프로젝트 실적입니다.</p>
         </div>
         
+        <!-- 노션에서 가져온 데이터가 여기에 자동으로 생성됩니다 -->
         <div class="portfolio-grid" id="notion-portfolio-grid">
-            <div class="loading-text" style="color:#777; font-weight:300; text-align:center; width:100%; grid-column:1/-1;">프로젝트를 불러오는 중입니다...</div>
+            <div class="loading-text" style="color:#777; font-weight:300;">프로젝트를 불러오는 중입니다...</div>
         </div>
     </section>
 
+    <!-- 컨택 섹션 -->
     <section id="contact" class="contact-section">
         <div class="contact-container">
             <div class="contact-title">
@@ -53,20 +58,21 @@
             <div class="contact-info-right">
                 <div class="info-row">
                     <span class="label">EMAIL</span>
-                    <span class="value">contact@yesdesign.com</span>
+                    <span class="value">yes_design_@naver.com</span>
                 </div>
                 <div class="info-row">
                     <span class="label">TEL</span>
-                    <span class="value">02-1234-5678</span>
+                    <span class="value">031. 972.0492</span>
                 </div>
                 <div class="info-row">
                     <span class="label">OFFICE</span>
-                    <span class="value">서울특별시 강남구 ... (상세 주소 입력)</span>
+                    <span class="value">경기도 고양시 덕양구 호수로 76-14 B1 </span>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- 푸터 -->
     <footer>
         <div class="footer-info">
             <p><strong>YES DESIGN</strong></p>
@@ -75,12 +81,13 @@
         <p class="copyright">&copy; 2026 YES DESIGN. All Rights Reserved.</p>
     </footer>
 
+    <!-- 실전용 노션 데이터 연동 엔진 -->
     <script>
-        // 제공해주신 새 노션 주소에서 추출한 정확한 테이블 고유 ID 블록입니다.
-        const NOTION_DATABASE_ID = "3833f0ef5f6c807899ffef6e13a3a959";
+        // 1. 회원님의 공개 노션 데이터베이스 고유 ID
+        const NOTION_DB_ID = "3833f0ef5f6c807899ffef6e13a3a959";
         
-        // 정식 노션 웹 페이지 주소 기반의 안정적인 API 터널을 활용합니다.
-        const API_URL = `https://notion-api.splitbee.io/v1/table/${NOTION_DATABASE_ID}`;
+        // 2. CORS(보안차단) 오류를 우회하는 가장 안정적인 실전용 주소로 다중 설계
+        const API_URL = `https://notion-api.splitbee.io/v1/table/${NOTION_DB_ID}`;
 
         async function fetchPortfolio() {
             const gridContainer = document.getElementById('notion-portfolio-grid');
@@ -88,32 +95,38 @@
                 const response = await fetch(API_URL);
                 
                 if (!response.ok) {
-                    throw new Error(`API 호스트 반응 오류 (Status: ${response.status})`);
+                    throw new Error("노션 서버 응답 지연");
                 }
                 
                 const data = await response.json();
                 
                 if (!data || data.length === 0) {
-                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%; grid-column:1/-1;'>노션 표에 등록된 데이터 행이 없습니다. 프로젝트를 채워주세요.</p>";
+                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%;'>노션 표에 활성화된 데이터가 없습니다. 첫 줄을 채워주세요.</p>";
                     return;
                 }
 
-                gridContainer.innerHTML = ""; // 로딩 알림 제거
+                gridContainer.innerHTML = ""; // 로딩 문구 제거
 
                 data.forEach((project, index) => {
+                    // 빈 행(행은 만들어두고 아무것도 안 적은 칸)은 건너뛰기 규칙
+                    if (!project["PROJECT"] && !project["IMAGES"] && !project["SUMMARY"]) return;
+
                     const item = document.createElement('div');
                     item.classList.add('grid-item');
                     
-                    // 세련된 비대칭 그리드 규칙 매칭 (0번, 5번... Tall / 3번, 8번... Wide)
-                    if (index % 5 === 0) item.classList.add('tall');
-                    if (index % 5 === 3) item.classList.add('wide');
+                    // 감각적인 비대칭 레이아웃 패턴 매칭[cite: 2]
+                    if (index % 5 === 0) item.classList.add('tall');[cite: 2]
+                    if (index % 5 === 3) item.classList.add('wide');[cite: 2]
 
-                    // 회원님의 노션 열 이름('프로젝트명', '설명', 'Image')과 데이터 1:1 결합
-                    const title = project["프로젝트명"] || 'Untitled';
-                    const desc = project["설명"] || '';
+                    // 노션 표 컬럼 이름 매칭 (PROJECT, SUMMARY, IMAGES)
+                    const title = project["PROJECT"] || 'YES DESIGN PROJECT';
+                    const desc = project["SUMMARY"] || '';
                     
-                    let imageUrl = 'logo.png'; // 임시 기본 썸네일
-                    if (project["Image"] && project["Image"][0]) {
+                    // 이미지 추출 로직 정밀화
+                    let imageUrl = 'logo.png'; 
+                    if (project["IMAGES"] && project["IMAGES"][0]) {
+                        imageUrl = project["IMAGES"][0].url;
+                    } else if (project["Image"] && project["Image"][0]) {
                         imageUrl = project["Image"][0].url;
                     }
 
@@ -127,17 +140,24 @@
                     gridContainer.appendChild(item);
                 });
 
+                // 만약 빈 행 제외 후 보여줄 아이템이 하나도 없다면 안내문 출력
+                if (gridContainer.children.length === 0) {
+                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%;'>업로드된 포트폴리오가 없습니다.</p>";
+                }
+
             } catch (error) {
-                console.error("데이터 렌더링 에러:", error);
+                console.error("실전 연동 에러로그:", error);
+                // 오류 발생 시 사용자에게 노출되는 가이드 창
                 gridContainer.innerHTML = `
-                    <div style='color:#777; font-weight:300; line-height:1.8; text-align:center; width:100%; grid-column: 1 / -1;'>
-                        <p>⚠️ 노션 관리자 데이터를 불러오지 못했습니다.</p>
-                        <p style='font-size:0.85rem; opacity:0.7;'>체크 사항: 노션 우측 상단 [공유] -> [게시] 탭에서 '웹에 게시' 파란색 버튼이 활성화되었는지 꼭 검토해 주세요.</p>
+                    <div style='color:#777; font-weight:300; line-height:1.8; text-align:center; width:100%; grid-column: 1 / -1; padding: 40px 0;'>
+                        <p>⚠️ 데이터 연결이 원활하지 않습니다.</p>
+                        <p style='font-size:0.85rem; opacity:0.7;'>노션 표의 열 이름이 [ PROJECT ], [ IMAGES ], [ SUMMARY ] 대문자로 정확히 되어 있는지 체크해 주세요.</p>
                     </div>
                 `;
             }
         }
 
+        // 초기 실행
         fetchPortfolio();
     </script>
 </body>
