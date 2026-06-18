@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -40,7 +40,7 @@
         </div>
         
         <div class="portfolio-grid" id="notion-portfolio-grid">
-            <div class="loading-text" style="color:#777; font-weight:300;">프로젝트를 불러오는 중입니다...</div>
+            <div class="loading-text" style="color:#777; font-weight:300; text-align:center; width:100%; grid-column:1/-1;">프로젝트를 불러오는 중입니다...</div>
         </div>
     </section>
 
@@ -76,9 +76,11 @@
     </footer>
 
     <script>
-        // 5.png 이미지 주소창에서 추출한 실제 회원님의 노션 데이터베이스 ID입니다.
-        const NOTION_PAGE_ID = "3833f0ef5f6c807899ffef6e13a3a959"; 
-        const API_URL = `https://notion-api.splitbee.io/v1/table/${NOTION_PAGE_ID}`;
+        // 제공해주신 새 노션 주소에서 추출한 정확한 테이블 고유 ID 블록입니다.
+        const NOTION_DATABASE_ID = "3833f0ef5f6c807899ffef6e13a3a959";
+        
+        // 정식 노션 웹 페이지 주소 기반의 안정적인 API 터널을 활용합니다.
+        const API_URL = `https://notion-api.splitbee.io/v1/table/${NOTION_DATABASE_ID}`;
 
         async function fetchPortfolio() {
             const gridContainer = document.getElementById('notion-portfolio-grid');
@@ -86,31 +88,31 @@
                 const response = await fetch(API_URL);
                 
                 if (!response.ok) {
-                    throw new Error(`네트워크 응답 오류 (상태코드: ${response.status})`);
+                    throw new Error(`API 호스트 반응 오류 (Status: ${response.status})`);
                 }
                 
                 const data = await response.json();
                 
                 if (!data || data.length === 0) {
-                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%; grid-column:1/-1;'>노션 표에 등록된 프로젝트 데이터가 없습니다.</p>";
+                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%; grid-column:1/-1;'>노션 표에 등록된 데이터 행이 없습니다. 프로젝트를 채워주세요.</p>";
                     return;
                 }
 
-                gridContainer.innerHTML = ""; // 로딩 문구 제거
+                gridContainer.innerHTML = ""; // 로딩 알림 제거
 
                 data.forEach((project, index) => {
                     const item = document.createElement('div');
                     item.classList.add('grid-item');
                     
-                    // 감각적인 비대칭 그리드 패턴 매칭
+                    // 세련된 비대칭 그리드 규칙 매칭 (0번, 5번... Tall / 3번, 8번... Wide)
                     if (index % 5 === 0) item.classList.add('tall');
                     if (index % 5 === 3) item.classList.add('wide');
 
-                    // 5.png의 실제 컬럼명('프로젝트명', '설명', 'Image')과 완벽 매칭
+                    // 회원님의 노션 열 이름('프로젝트명', '설명', 'Image')과 데이터 1:1 결합
                     const title = project["프로젝트명"] || 'Untitled';
                     const desc = project["설명"] || '';
                     
-                    let imageUrl = 'logo.png'; // 대체 기본 이미지
+                    let imageUrl = 'logo.png'; // 임시 기본 썸네일
                     if (project["Image"] && project["Image"][0]) {
                         imageUrl = project["Image"][0].url;
                     }
@@ -126,11 +128,11 @@
                 });
 
             } catch (error) {
-                console.error("노션 데이터 연동 실패 원인:", error);
+                console.error("데이터 렌더링 에러:", error);
                 gridContainer.innerHTML = `
                     <div style='color:#777; font-weight:300; line-height:1.8; text-align:center; width:100%; grid-column: 1 / -1;'>
-                        <p>⚠️ 노션 데이터를 불러오는 데 실패했습니다.</p>
-                        <p style='font-size:0.85rem; opacity:0.7;'>원인: 노션 페이지가 공유에서 '웹에 게시' 상태가 아니거나 권한이 제한되어 있습니다.</p>
+                        <p>⚠️ 노션 관리자 데이터를 불러오지 못했습니다.</p>
+                        <p style='font-size:0.85rem; opacity:0.7;'>체크 사항: 노션 우측 상단 [공유] -> [게시] 탭에서 '웹에 게시' 파란색 버튼이 활성화되었는지 꼭 검토해 주세요.</p>
                     </div>
                 `;
             }
