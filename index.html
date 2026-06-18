@@ -76,11 +76,8 @@
     </footer>
 
     <script>
-        // ⚠️ [중요] 여기 따옴표 안에 회원님의 노션 표 페이지 ID 32자리를 정확히 입력해 주세요!
-        // 주소창에서 무작위 영어+숫자로 된 32자리 문자열만 쏙 골라 넣으셔야 합니다.
-        const NOTION_PAGE_ID = "3833f0ef5f6c807899ffef6e13a3a959"; 
-        
-        // 더 안정적인 공개 API 터널 주소로 변경
+        // 5.png 이미지 주소창에서 추출한 실제 회원님의 노션 데이터베이스 ID입니다.
+        const NOTION_PAGE_ID = "1329bf31a6138096b12cc80e60803522"; 
         const API_URL = `https://notion-api.splitbee.io/v1/table/${NOTION_PAGE_ID}`;
 
         async function fetchPortfolio() {
@@ -88,7 +85,6 @@
             try {
                 const response = await fetch(API_URL);
                 
-                // 만약 주소가 잘못되었거나 노션 권한 차단인 경우 경고 출력
                 if (!response.ok) {
                     throw new Error(`네트워크 응답 오류 (상태코드: ${response.status})`);
                 }
@@ -96,7 +92,7 @@
                 const data = await response.json();
                 
                 if (!data || data.length === 0) {
-                    gridContainer.innerHTML = "<p style='color:#777;'>노션 표에 등록된 데이터 행이 없습니다. 데이터를 추가해 주세요.</p>";
+                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%; grid-column:1/-1;'>노션 표에 등록된 프로젝트 데이터가 없습니다.</p>";
                     return;
                 }
 
@@ -106,18 +102,17 @@
                     const item = document.createElement('div');
                     item.classList.add('grid-item');
                     
+                    // 감각적인 비대칭 그리드 패턴 매칭
                     if (index % 5 === 0) item.classList.add('tall');
                     if (index % 5 === 3) item.classList.add('wide');
 
-                    // 노션의 데이터 구조 안정화 처리 (대소문자 체크 필수)
-                    const title = project["이름"] || project["Name"] || 'Untitled';
-                    const desc = project["Description"] || project["설명"] || '';
+                    // 5.png의 실제 컬럼명('프로젝트명', '설명', 'Image')과 완벽 매칭
+                    const title = project["프로젝트명"] || 'Untitled';
+                    const desc = project["설명"] || '';
                     
-                    let imageUrl = 'logo.png'; // 기본 대체 이미지
+                    let imageUrl = 'logo.png'; // 대체 기본 이미지
                     if (project["Image"] && project["Image"][0]) {
                         imageUrl = project["Image"][0].url;
-                    } else if (project["image"] && project["image"][0]) {
-                        imageUrl = project["image"][0].url;
                     }
 
                     item.innerHTML = `
@@ -135,7 +130,7 @@
                 gridContainer.innerHTML = `
                     <div style='color:#777; font-weight:300; line-height:1.8; text-align:center; width:100%; grid-column: 1 / -1;'>
                         <p>⚠️ 노션 데이터를 불러오는 데 실패했습니다.</p>
-                        <p style='font-size:0.85rem; opacity:0.7;'>원인: 노션 페이지가 '웹에 게시' 상태가 아니거나 ID 값이 올바르지 않습니다.</p>
+                        <p style='font-size:0.85rem; opacity:0.7;'>원인: 노션 페이지가 공유에서 '웹에 게시' 상태가 아니거나 권한이 제한되어 있습니다.</p>
                     </div>
                 `;
             }
