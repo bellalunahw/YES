@@ -3,60 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artemis Arch | Portfolio</title>
+    <title>YES DESIGN | Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <!-- 구글 폰트 연결 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- 헤더 / 내비게이션 -->
     <header>
-        <div class="logo">ARTEMIS ARCH</div>
+        <div class="logo">YES DESIGN</div>
         <nav>
             <a href="#about">ABOUT</a>
+            <a href="#services">SERVICES</a>
             <a href="#projects">PROJECTS</a>
-            <a href="#contact">CONTACT</a>
         </nav>
     </header>
 
-    <!-- 메인 상단 (Hero Section) -->
-    <section class="hero-section">
+    <section id="about" class="hero-section">
         <div class="hero-container">
             <div class="hero-text">
                 <h1>We Provide<br>the Essential Value</h1>
-                <p>공간의 본질적인 가치를 담아내는 상업 공간 설계 및 브랜딩을 지향합니다.</p>
+                <p class="sub-slogan">고객의 요구를 넘어, 공간의 가치를 창조하는 파트너</p>
+                <p class="description">
+                    예스디자인(YES DESIGN)은 인테리어 디자인 기획, 설계 및 시공, 크리에이티브 브랜딩까지 아우르는 전문 디자인 그룹입니다. 
+                    우리는 단순한 마감을 넘어 공간 본연의 역할과 비즈니스 성공을 이끄는 본질적인 가치를 설계합니다.
+                </p>
             </div>
             <div class="hero-image">
-                <!-- 깃허브에 있는 logo.png나 메인 이미지를 연결해보세요 -->
-                <img src="logo.png" alt="Main Image">
+                <img src="logo.png" alt="YES Design Hero Image">
             </div>
         </div>
     </section>
 
-    <!-- 포트폴리오 그리드 섹션 -->
+    <section id="services" class="services-section">
+        <div class="section-title">
+            <h2>OUR SERVICES</h2>
+            <p>비즈니스의 경계를 넓히는 예스디자인의 전문 영역</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Interior Design & Plan</h3>
+                <p>상업 공간, F&B, 오피스 등 환경 분석에 기반한 체계적인 2D 설계 및 3D 디자인 시안 기획</p>
+            </div>
+            <div class="service-card">
+                <h3>Construction</h3>
+                <p>철저한 공정 관리와 정밀한 시공 기술력을 바탕으로 완성도 높은 공간 구현</p>
+            </div>
+            <div class="service-card">
+                <h3>Exhibition & Branding</h3>
+                <p>브랜드 아이덴티티 구축부터 공간 연출, 전시 기획까지 연결되는 토탈 크리에이티브 솔루션</p>
+            </div>
+        </div>
+    </section>
+
     <section id="projects" class="portfolio-section">
         <div class="section-title">
             <h2>OUR PROJECTS</h2>
-            <p>공간 설계, 디자인 시안 및 브랜딩 프로젝트</p>
+            <p>예스디자인이 진행한 대표 프로젝트 실적</p>
         </div>
         
         <div class="portfolio-grid">
-            <!-- 각 이미지 아이템 (추후 실제 이미지 파일명으로 변경 가능) -->
-            <div class="grid-item tall"><img src="logo.png" alt="Project 1"></div>
-            <div class="grid-item"><img src="logo.png" alt="Project 2"></div>
-            <div class="grid-item"><img src="logo.png" alt="Project 3"></div>
-            <div class="grid-item wide"><img src="logo.png" alt="Project 4"></div>
-            <div class="grid-item"><img src="logo.png" alt="Project 5"></div>
-            <div class="grid-item tall"><img src="logo.png" alt="Project 6"></div>
+            <div class="grid-item tall">
+                <img src="project1.jpg" alt="상업공간 인테리어 프로젝트">
+                <div class="item-overlay">
+                    <h4>Commercial Space</h4>
+                    <p>인테리어 설계 및 시공</p>
+                </div>
+            </div>
+            
+            <div class="grid-item">
+                <img src="project2.jpg" alt="F&B 레스토랑 디자인">
+                <div class="item-overlay">
+                    <h4>F&B Space</h4>
+                    <p>공간 기획 & 디자인 시안</p>
+                </div>
+            </div>
+            
+            <div class="grid-item">
+                <img src="project3.jpg" alt="오피스 인테리어">
+                <div class="item-overlay">
+                    <h4>Office Design</h4>
+                    <p>레이아웃 플래닝 및 설계</p>
+                </div>
+            </div>
+            
+            <div class="grid-item wide">
+                <img src="project4.jpg" alt="전시 및 연출">
+                <div class="item-overlay">
+                    <h4>Exhibition & Display</h4>
+                    <p>브랜드 전시 가구 및 연출</p>
+                </div>
+            </div>
+            
+            <div class="grid-item">
+                <img src="project5.jpg" alt="가구 및 브랜딩">
+                <div class="item-overlay">
+                    <h4>Branding & Detail</h4>
+                    <p>크리에이티브 디렉션</p>
+                </div>
+            </div>
+            
+            <div class="grid-item tall">
+                <img src="project6.jpg" alt="최근 완료 프로젝트">
+                <div class="item-overlay">
+                    <h4>Recent Work</h4>
+                    <p>종합 인테리어 솔루션</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- 푸터 -->
     <footer>
-        <p>&copy; 2026 ARTEMIS ARCH. All Rights Reserved.</p>
+        <div class="footer-info">
+            <p><strong>YES DESIGN</strong> | 대표자: 예스디자인</p>
+            <p>Interior Design · 2D&3D Planning · Construction · Branding</p>
+        </div>
+        <p class="copyright">&copy; 2026 YES DESIGN. All Rights Reserved.</p>
     </footer>
 
 </body>
