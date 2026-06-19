@@ -36,11 +36,51 @@
     <section id="projects" class="portfolio-section">
         <div class="section-title">
             <h2>OUR PROJECTS</h2>
-            <p>노션 관리자 모드에서 실시간으로 동기화되는 프로젝트 실적입니다.</p>
+            <p>예스디자인이 진행한 독창적인 공간 디자인 프로젝트 아카이브입니다.</p>
         </div>
         
-        <div class="portfolio-grid" id="notion-portfolio-grid">
-            <div class="loading-text" style="color:#777; font-weight:300; text-align:center; width:100%; grid-column:1/-1;">프로젝트를 불러오는 중입니다...</div>
+        <div class="portfolio-grid">
+
+            <div class="grid-item tall">
+                <img src="burgerle.jpg" alt="BURGERLE">
+                <div class="item-overlay">
+                    <h4>BURGERLE</h4>
+                    <p>F&B 공간 인테리어 디자인 및 시공</p>
+                </div>
+            </div>
+
+            <div class="grid-item">
+                <img src="project2.jpg" alt="Commercial Space">
+                <div class="item-overlay">
+                    <h4>Commercial Space</h4>
+                    <p>상업 공간 기획 및 설계</p>
+                </div>
+            </div>
+
+            <div class="grid-item">
+                <img src="project3.jpg" alt="Office Design">
+                <div class="item-overlay">
+                    <h4>Office Design</h4>
+                    <p>테크니컬 디테일 설계 및 도면화</p>
+                </div>
+            </div>
+
+            <div class="grid-item wide">
+                <img src="project4.jpg" alt="Premium Lounge">
+                <div class="item-overlay">
+                    <h4>Premium Lounge</h4>
+                    <p>고급 상업 라운지 비주얼 디렉션</p>
+                </div>
+            </div>
+
+            <div class="grid-item">
+                <img src="project5.jpg" alt="Branding Detail">
+                <div class="item-overlay">
+                    <h4>Spatial Value</h4>
+                    <p>공간 본질의 가치 설계</p>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -49,11 +89,21 @@
             <div class="contact-title">
                 <h2>START A PROJECT</h2>
                 <p>공간과 브랜드의 가치를 바꾸는 첫걸음, 예스디자인과 함께하세요.</p>
+                
+                <div class="map-wrapper" style="margin-top: 30px; border: 1px solid #e0e0e0; max-width: 450px; overflow: hidden;">
+                    <a href="https://map.naver.com/v5/search/%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EA%B3%A0%EC%96%91%EC%8B%9C%20%EB%8D%95%EC%96%91%EA%B5%AC%20%ED%98%B8%EC%88%98%EB%A1%9C%2076-14" target="_blank" style="text-decoration: none; display: block;">
+                        <img src="map_thumb.jpg" alt="SITE" style="width: 100%; height: 200px; object-fit: cover; display: block;">
+                        <div style="background: #f9f9f9; padding: 12px; text-align: center; color: #2db400; font-weight: 500; font-size: 0.9rem; border-top: 1px solid #e0e0e0;">
+                            N 네이버 지도로 길찾기 →
+                        </div>
+                    </a>
+                </div>
             </div>
+            
             <div class="contact-info-right">
                 <div class="info-row">
                     <span class="label">EMAIL</span>
-                    <span class="value">contact@yesdesign.com</span>
+                    <span class="value"><a href="yes_design_@naver.com" style="color: inherit; text-decoration: none;">yes_design_@naver.com</a></span>
                 </div>
                 <div class="info-row">
                     <span class="label">TEL</span>
@@ -75,103 +125,5 @@
         <p class="copyright">&copy; 2026 YES DESIGN. All Rights Reserved.</p>
     </footer>
 
-    <script>
-        // 회원님이 제공해주신 진짜 노션 데이터베이스 ID 블록
-        const DATABASE_ID = "3833f0ef5f6c807899ffef6e13a3a959";
-        
-        // 가장 안정적인 오픈소스 노션 가공 가속도 터널 주소 활용
-        const WORKER_URL = `https://notion-api.splitbee.io/v1/table/${DATABASE_ID}`;
-
-        async function fetchNotionPortfolio() {
-            const gridContainer = document.getElementById('notion-portfolio-grid');
-            try {
-                // 브라우저의 CORS(보안차단) 규약을 우회하는 실전용 상용 게이트웨이 파이프라인 가동
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(WORKER_URL)}`;
-                const response = await fetch(proxyUrl);
-                
-                if (!response.ok) throw new Error("데이터 게이트웨이 응답 에러");
-                
-                const rawJson = await response.json();
-                const data = JSON.parse(rawJson.contents);
-
-                if (!data || data.length === 0) {
-                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%; grid-column:1/-1;'>노션 표에 프로젝트 데이터 행이 비어 있습니다. 노션 앱에 데이터를 채워주세요.</p>";
-                    return;
-                }
-
-                gridContainer.innerHTML = ""; // 로딩 알림 제거
-
-                data.forEach((project, index) => {
-                    // 노션 표에 행만 만들어두고 아무것도 적지 않은 빈 데이터 방어 처리
-                    if (!project["PROJECT"] && !project["IMAGES"] && !project["SUMMARY"]) return;
-
-                    const item = document.createElement('div');
-                    item.classList.add('grid-item');
-                    
-                    // 감각적인 갤러리 비대칭 그리드 레이아웃 자동 분배 연산
-                    if (index % 5 === 0) item.classList.add('tall');
-                    if (index % 5 === 3) item.classList.add('wide');
-
-                    // 회원님의 노션 표 대문자 컬럼 속성명([PROJECT], [SUMMARY], [IMAGES]) 완벽 결합
-                    const title = project["PROJECT"] || 'YES DESIGN PROJECT';
-                    const desc = project["SUMMARY"] || '';
-                    
-                    // 노션 이미지 파일 원본 고화질 웹 주소 자동 정제 레이어
-                    let imageUrl = 'logo.png'; 
-                    if (project["IMAGES"] && project["IMAGES"][0]) {
-                        imageUrl = project["IMAGES"][0].url;
-                    }
-
-                    item.innerHTML = `
-                        <img src="${imageUrl}" alt="${title}">
-                        <div class="item-overlay">
-                            <h4>${title}</h4>
-                            <p>${desc}</p>
-                        </div>
-                    `;
-                    gridContainer.appendChild(item);
-                });
-
-                // 필터링 후 유효 데이터가 없을 때의 안전장치
-                if (gridContainer.children.length === 0) {
-                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%; grid-column:1/-1;'>유효한 포트폴리오 데이터가 존재하지 않습니다.</p>";
-                }
-
-            } catch (error) {
-                console.error("노션 동기화 실패 로그:", error);
-                
-                // 1차 터널 차단 시 백업 서버망(Cloudflare Worker)으로 2차 다이렉트 긴급 자동 우회 시도
-                try {
-                    const backupRes = await fetch(`https://page.notion.workers.dev/v1/table/${DATABASE_ID}`);
-                    const backupData = await backupRes.json();
-                    if (backupData && backupData.length > 0) {
-                        gridContainer.innerHTML = "";
-                        backupData.forEach((project, index) => {
-                            const item = document.createElement('div');
-                            item.classList.add('grid-item');
-                            if (index % 5 === 0) item.classList.add('tall');
-                            if (index % 5 === 3) item.classList.add('wide');
-                            const title = project["PROJECT"] || 'YES DESIGN';
-                            const desc = project["SUMMARY"] || '';
-                            let imageUrl = project["IMAGES"] && project["IMAGES"][0] ? project["IMAGES"][0].url : 'logo.png';
-                            
-                            item.innerHTML = `<img src="${imageUrl}"><div class='item-overlay'><h4>${title}</h4><p>${desc}</p></div>`;
-                            gridContainer.appendChild(item);
-                        });
-                        return;
-                    }
-                } catch(e) {}
-
-                gridContainer.innerHTML = `
-                    <div style='color:#777; font-weight:300; text-align:center; width:100%; grid-column: 1 / -1; padding: 40px 0;'>
-                        <p>⚠️ 노션 데이터 동기화 성공 (보안 터널 세팅 완료)</p>
-                        <p style='font-size:0.85rem; opacity:0.7; margin-top:5px;'>노션 앱의 표에서 제목들이 [ PROJECT ], [ IMAGES ], [ SUMMARY ] 대문자로 적혀있는지 한 번만 확인해 주세요.</p>
-                    </div>
-                `;
-            }
-        }
-
-        fetchNotionPortfolio();
-    </script>
 </body>
 </html>
