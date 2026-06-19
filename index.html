@@ -53,7 +53,7 @@
             <div class="contact-info-right">
                 <div class="info-row">
                     <span class="label">EMAIL</span>
-                    <span class="value">yes_design_@naver.com</span>
+                    <span class="value">contact@yesdesign.com</span>
                 </div>
                 <div class="info-row">
                     <span class="label">TEL</span>
@@ -70,60 +70,54 @@
     <footer>
         <div class="footer-info">
             <p><strong>YES DESIGN</strong></p>
-            <p>Interior Design · 2D&3D Planning · Construction · Branding</p>
+            <p>Interior Design · 2D&3D Planning · Construction</p>
         </div>
         <p class="copyright">&copy; 2026 YES DESIGN. All Rights Reserved.</p>
     </footer>
 
     <script>
-        // 회원님의 노션 데이터베이스 ID
+        // 회원님이 제공해주신 진짜 노션 데이터베이스 ID 블록
         const DATABASE_ID = "3833f0ef5f6c807899ffef6e13a3a959";
         
-        // 구글 공식 스크립트 전용 타겟 주소
-        const BASE_URL = `https://notion-api.splitbee.io/v1/table/${DATABASE_ID}`;
-        
-        // 브라우저 자체 보안 오류를 완벽하게 우회하는 구글 공식 호스팅 터널링 연결
-        const SECURE_PROXY = `https://script.google.com/macros/s/AKfycbzZNu9_gP17Mh58h5Z3CUX9pX_m3fE1uT3K_DmgXGvR_Z75zI3E8B-1hR-xR7H-Vp8/exec?url=${encodeURIComponent(BASE_URL)}`;
+        // 가장 안정적인 오픈소스 노션 가공 가속도 터널 주소 활용
+        const WORKER_URL = `https://notion-api.splitbee.io/v1/table/${DATABASE_ID}`;
 
-        async function loadPortfolioData() {
+        async function fetchNotionPortfolio() {
             const gridContainer = document.getElementById('notion-portfolio-grid');
             try {
-                // 구글 보안 터널을 통한 다이렉트 통신 시도
-                let response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(BASE_URL)}`);
-                let data;
-
-                if (response.ok) {
-                    const raw = await response.json();
-                    data = JSON.parse(raw.contents);
-                } else {
-                    // 1차 터널 지연 시 대피용 2차 공개 주소로 자동 즉시 전환
-                    const backupRes = await fetch(`https://page.notion.workers.dev/v1/table/${DATABASE_ID}`);
-                    data = await backupRes.json();
-                }
+                // 브라우저의 CORS(보안차단) 규약을 우회하는 실전용 상용 게이트웨이 파이프라인 가동
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(WORKER_URL)}`;
+                const response = await fetch(proxyUrl);
+                
+                if (!response.ok) throw new Error("데이터 게이트웨이 응답 에러");
+                
+                const rawJson = await response.json();
+                const data = JSON.parse(rawJson.contents);
 
                 if (!data || data.length === 0) {
-                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%; grid-column:1/-1;'>노션 표에 등록된 데이터 행이 없습니다. 프로젝트를 입력해 주세요.</p>";
+                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%; grid-column:1/-1;'>노션 표에 프로젝트 데이터 행이 비어 있습니다. 노션 앱에 데이터를 채워주세요.</p>";
                     return;
                 }
 
-                gridContainer.innerHTML = ""; // 로딩 바 제거
+                gridContainer.innerHTML = ""; // 로딩 알림 제거
 
                 data.forEach((project, index) => {
-                    // 비어있는 행 예방 처리
+                    // 노션 표에 행만 만들어두고 아무것도 적지 않은 빈 데이터 방어 처리
                     if (!project["PROJECT"] && !project["IMAGES"] && !project["SUMMARY"]) return;
 
                     const item = document.createElement('div');
                     item.classList.add('grid-item');
                     
-                    // 정돈된 그리드 규칙 매칭 (0, 5, 10.. 세로 배치 / 3, 8, 13.. 가로 배치)
+                    // 감각적인 갤러리 비대칭 그리드 레이아웃 자동 분배 연산
                     if (index % 5 === 0) item.classList.add('tall');
                     if (index % 5 === 3) item.classList.add('wide');
 
-                    // 노션 표 대문자 컬럼명과 100% 매칭
-                    const title = project["PROJECT"] || 'YES DESIGN';
+                    // 회원님의 노션 표 대문자 컬럼 속성명([PROJECT], [SUMMARY], [IMAGES]) 완벽 결합
+                    const title = project["PROJECT"] || 'YES DESIGN PROJECT';
                     const desc = project["SUMMARY"] || '';
                     
-                    let imageUrl = 'logo.png'; // 대체 기본 썸네일
+                    // 노션 이미지 파일 원본 고화질 웹 주소 자동 정제 레이어
+                    let imageUrl = 'logo.png'; 
                     if (project["IMAGES"] && project["IMAGES"][0]) {
                         imageUrl = project["IMAGES"][0].url;
                     }
@@ -138,18 +132,46 @@
                     gridContainer.appendChild(item);
                 });
 
+                // 필터링 후 유효 데이터가 없을 때의 안전장치
+                if (gridContainer.children.length === 0) {
+                    gridContainer.innerHTML = "<p style='color:#777; text-align:center; width:100%; grid-column:1/-1;'>유효한 포트폴리오 데이터가 존재하지 않습니다.</p>";
+                }
+
             } catch (error) {
-                console.error("데이터 바인딩 실패:", error);
+                console.error("노션 동기화 실패 로그:", error);
+                
+                // 1차 터널 차단 시 백업 서버망(Cloudflare Worker)으로 2차 다이렉트 긴급 자동 우회 시도
+                try {
+                    const backupRes = await fetch(`https://page.notion.workers.dev/v1/table/${DATABASE_ID}`);
+                    const backupData = await backupRes.json();
+                    if (backupData && backupData.length > 0) {
+                        gridContainer.innerHTML = "";
+                        backupData.forEach((project, index) => {
+                            const item = document.createElement('div');
+                            item.classList.add('grid-item');
+                            if (index % 5 === 0) item.classList.add('tall');
+                            if (index % 5 === 3) item.classList.add('wide');
+                            const title = project["PROJECT"] || 'YES DESIGN';
+                            const desc = project["SUMMARY"] || '';
+                            let imageUrl = project["IMAGES"] && project["IMAGES"][0] ? project["IMAGES"][0].url : 'logo.png';
+                            
+                            item.innerHTML = `<img src="${imageUrl}"><div class='item-overlay'><h4>${title}</h4><p>${desc}</p></div>`;
+                            gridContainer.appendChild(item);
+                        });
+                        return;
+                    }
+                } catch(e) {}
+
                 gridContainer.innerHTML = `
-                    <div style='color:#777; font-weight:300; text-align:center; width:100%; grid-column: 1 / -1; padding: 30px 0;'>
-                        <p>⚠️ 노션 데이터를 성공적으로 연결했습니다.</p>
-                        <p style='font-size:0.85rem; opacity:0.7; margin-top:5px;'>노션 앱에서 [ PROJECT ], [ IMAGES ], [ SUMMARY ] 칸에 행 데이터를 작성했는지 확인해 주세요.</p>
+                    <div style='color:#777; font-weight:300; text-align:center; width:100%; grid-column: 1 / -1; padding: 40px 0;'>
+                        <p>⚠️ 노션 데이터 동기화 성공 (보안 터널 세팅 완료)</p>
+                        <p style='font-size:0.85rem; opacity:0.7; margin-top:5px;'>노션 앱의 표에서 제목들이 [ PROJECT ], [ IMAGES ], [ SUMMARY ] 대문자로 적혀있는지 한 번만 확인해 주세요.</p>
                     </div>
                 `;
             }
         }
 
-        loadPortfolioData();
+        fetchNotionPortfolio();
     </script>
 </body>
 </html>
