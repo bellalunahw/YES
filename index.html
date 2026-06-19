@@ -8,9 +8,94 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 💡 정정사각형 균일 그리드 및 포커싱 레이아웃 제어를 위한 핵심 스타일 시트 추가 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* PROJECTS 타겟팅 시 여백 최적화 조율 */
+        .portfolio-section {
+            scroll-margin-top: 80px; 
+            padding: 100px 20px;
+        }
+
+        /* 구조적 비대칭을 모두 제거하고 균일한 3열 정사각형 그리드 망 구축 */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 1:1 비율 멀티미디어 종횡비 홀더 강제 선언 */
+        .grid-item {
+            position: relative;
+            width: 100%;
+            padding-top: 100% !important; /* 1:1 정사각형 고정 비율 형성 */
+            overflow: hidden;
+            border-radius: 0px;
+            grid-column: auto !important;  /* 기존 tall, wide 속성 무력화 */
+            grid-row: auto !important;
+        }
+
+        .grid-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지가 찌그러지지 않고 정사이즈 크롭 채움 */
+            transition: transform 0.5s ease;
+        }
+
+        .grid-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .grid-item:hover .item-overlay {
+            opacity: 1;
+        }
+
+        /* 카테고리 폰트 스케일 가독성 보정 */
+        .item-overlay h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .item-overlay p {
+            font-size: 0.85rem;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
 
+    <!-- 헤더 / 내비게이션 -->
     <header>
         <div class="logo">YES DESIGN</div>
         <nav>
@@ -20,6 +105,7 @@
         </nav>
     </header>
 
+    <!-- 메인 상단 (Hero Section) -->
     <section id="about" class="hero-section">
         <div class="hero-container">
             <div class="hero-text-full">
@@ -33,57 +119,64 @@
         </div>
     </section>
 
+    <!-- 포트폴리오 그리드 섹션 (정사각 균일 배열 및 카테고리 구조 변경) -->
     <section id="projects" class="portfolio-section">
         <div class="section-title">
             <h2>OUR PROJECTS</h2>
-            <p>예스디자인이 진행한 독창적인 공간 디자인 프로젝트 아카이브입니다.</p>
+            <p>예스디자인이 구축한 카테고리별 공간 설계 포트폴리오입니다.</p>
         </div>
         
         <div class="portfolio-grid">
 
-            <div class="grid-item tall">
-                <img src="burgerle.jpg" alt="BURGERLE">
-                <div class="item-overlay">
-                    <h4>BURGERLE</h4>
-                    <p>F&B 공간 인테리어 디자인 및 시공</p>
-                </div>
-            </div>
-
+            <!-- 카테고리 1: F&B SPACE -->
             <div class="grid-item">
-                <img src="project2.jpg" alt="Commercial Space">
+                <img src="burgerle.jpg" alt="F&B SPACE">
                 <div class="item-overlay">
-                    <h4>Commercial Space</h4>
-                    <p>상업 공간 기획 및 설계</p>
+                    <h4>F&B SPACE</h4>
+                    <p>BURGERLE 및 식품·음료 상업 공간 디자인</p>
                 </div>
             </div>
 
+            <!-- 카테고리 2: COMMERCIAL SPACE -->
             <div class="grid-item">
-                <img src="project3.jpg" alt="Office Design">
+                <img src="project2.jpg" alt="COMMERCIAL SPACE">
                 <div class="item-overlay">
-                    <h4>Office Design</h4>
-                    <p>테크니컬 디테일 설계 및 도면화</p>
+                    <h4>COMMERCIAL SPACE</h4>
+                    <p>일반 상업 공간 기획 및 최적의 레이아웃 설계</p>
                 </div>
             </div>
 
-            <div class="grid-item wide">
-                <img src="project4.jpg" alt="Premium Lounge">
-                <div class="item-overlay">
-                    <h4>Premium Lounge</h4>
-                    <p>고급 상업 라운지 비주얼 디렉션</p>
-                </div>
-            </div>
-
+            <!-- 카테고리 3: OFFICE SPACE -->
             <div class="grid-item">
-                <img src="project5.jpg" alt="Branding Detail">
+                <img src="project3.jpg" alt="OFFICE SPACE">
                 <div class="item-overlay">
-                    <h4>Spatial Value</h4>
-                    <p>공간 본질의 가치 설계</p>
+                    <h4>OFFICE SPACE</h4>
+                    <p>업무 효율을 높이는 테크니컬 오피스 디테일 플래닝</p>
+                </div>
+            </div>
+
+            <!-- 카테고리 4: MEDICAL & PUBLIC -->
+            <div class="grid-item">
+                <img src="project4.jpg" alt="MEDICAL & PUBLIC">
+                <div class="item-overlay">
+                    <h4>MEDICAL & PUBLIC</h4>
+                    <p>전문 의료 시설 및 프리미엄 라운지 비주얼 디렉션</p>
+                </div>
+            </div>
+
+            <!-- 카테고리 5: SPATIAL VALUE -->
+            <div class="grid-item">
+                <img src="project5.jpg" alt="SPATIAL VALUE">
+                <div class="item-overlay">
+                    <h4>SPATIAL VALUE</h4>
+                    <p>사용자의 삶을 담아내는 본질적인 공간 가치 구현</p>
                 </div>
             </div>
 
         </div>
     </section>
 
+    <!-- 컨택 섹션 (네이버 지도 인프라 유지) -->
     <section id="contact" class="contact-section">
         <div class="contact-container">
             <div class="contact-title">
@@ -92,7 +185,7 @@
                 
                 <div class="map-wrapper" style="margin-top: 30px; border: 1px solid #e0e0e0; max-width: 450px; overflow: hidden;">
                     <a href="https://map.naver.com/v5/search/%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EA%B3%A0%EC%96%91%EC%8B%9C%20%EB%8D%95%EC%96%91%EA%B5%AC%20%ED%98%B8%EC%88%98%EB%A1%9C%2076-14" target="_blank" style="text-decoration: none; display: block;">
-                        <img src="map_thumb.png" alt="SITE" style="width: 100%; height: 200px; object-fit: cover; display: block;">
+                        <img src="map_thumb.png" alt="예스디자인 네이버지도 보기" style="width: 100%; height: 200px; object-fit: cover; display: block;">
                         <div style="background: #f9f9f9; padding: 12px; text-align: center; color: #2db400; font-weight: 500; font-size: 0.9rem; border-top: 1px solid #e0e0e0;">
                             N 네이버 지도로 길찾기 →
                         </div>
@@ -103,7 +196,7 @@
             <div class="contact-info-right">
                 <div class="info-row">
                     <span class="label">EMAIL</span>
-                    <span class="value"><a href="yes_design_@naver.com" style="color: inherit; text-decoration: none;">yes_design_@naver.com</a></span>
+                    <span class="value"><a href="mailto:yes_design_@naver.com" style="color: inherit; text-decoration: none;">yes_design_@naver.com</a></span>
                 </div>
                 <div class="info-row">
                     <span class="label">TEL</span>
@@ -117,6 +210,7 @@
         </div>
     </section>
 
+    <!-- 푸터 -->
     <footer>
         <div class="footer-info">
             <p><strong>YES DESIGN</strong></p>
