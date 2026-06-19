@@ -110,7 +110,7 @@
         .login-input { width: 100%; padding: 12px; border: 1px solid #ddd; margin-bottom: 12px; font-size: 0.9rem; }
         .login-btn { width: 100%; padding: 12px; background: #111; color: #fff; border: none; font-weight: 700; cursor: pointer; }
 
-        .admin-main-dashboard { display: none; } /* 로그인 전 숨김 처리 */
+        .admin-main-dashboard { display: none; } 
         .admin-wrapper { max-width: 900px; margin: 0 auto; width: 100%; }
         .admin-form-box { background: #f9f9f9; padding: 25px; border: 1px solid #eee; margin-bottom: 40px; }
         .admin-form-box h3 { margin-bottom: 15px; font-size: 1.1rem; }
@@ -118,7 +118,6 @@
         .form-group label { font-size: 0.8rem; font-weight: 700; color: #666; }
         .form-group input, .form-group select { padding: 10px; border: 1px solid #ddd; font-size: 0.9rem; width: 100%; }
         
-        /* 파일 다중선택 커스텀 스타일 */
         .file-count-info { font-size: 0.8rem; color: #666; font-weight: 500; margin-top: 2px; }
         .submit-btn { background: #111; color: #fff; border: none; padding: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 500; width: 100%; margin-top: 10px; }
         
@@ -150,4 +149,403 @@
         }
         .map-thumbnail-box img { 
             width: 100%; 
-            height: 10
+            height: 100%; 
+            object-fit: contain; 
+            image-rendering: -webkit-optimize-contrast; 
+            image-rendering: crisp-edges; 
+        }
+        .naver-map-btn { display: inline-flex; align-items: center; background-color: #03c75a; color: #fff !important; text-decoration: none; padding: 8px 16px; font-size: 0.8rem; font-weight: 500; border-radius: 4px; }
+        .contact-info-right { width: 100%; border-top: 1px solid #eee; padding-top: 20px; }
+        .info-row { margin-bottom: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .info-row .label { font-size: 0.7rem; font-weight: 700; color: #999; letter-spacing: 1px; }
+        .info-row .value { font-size: 0.85rem; color: #333; }
+        .info-row a { color: inherit; text-decoration: none; }
+        .close-page-btn { position: absolute; top: 25px; right: 30px; font-size: 1.6rem; font-weight: 300; color: #111; text-decoration: none; padding: 5px; z-index: 105; }
+
+        @media (max-width: 900px) {
+            .nav-arrow { font-size: 2rem; }
+            .arrow-left { left: 10px; }
+            .arrow-right { right: 10px; }
+        }
+        @media (max-width: 768px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+
+    <!-- 고정 헤더 내비게이션 -->
+    <header>
+        <div class="logo"><a href="#">YES DESIGN</a></div>
+        <nav>
+            <a href="#about">ABOUT</a>
+            <a href="#projects">PROJECTS</a>
+            <a href="#contact">CONTACT</a>
+            <a href="#admin" class="admin-btn">ADMIN</a>
+        </nav>
+    </header>
+
+    <!-- 메인 홈 -->
+    <main id="home-hero">
+        <div class="hero-container">
+            <div class="hero-text-full">
+                <h1>We Provide<br>the Essential Value</h1>
+                <p class="sub-slogan">고객의 요구를 넘어, 공간의 가치를 창조하는 파트너</p>
+                <p class="description">인테리어 디자인 기획, 설계 및 시공 전문 디자인 그룹 예스디자인입니다.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- [ABOUT] -->
+    <section id="about" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        <div class="about-content">
+            <h2>ABOUT US</h2>
+            <p style="font-weight: 500; margin-bottom: 25px;">"사용자의 삶을 온전히 담아내는 견고한 세계를 설계합니다."</p>
+            <p>단순한 심미적 마감을 넘어 철저한 공간 설계 분석과 정밀한 테크니컬 디테일 도면화를 구현합니다.</p>
+        </div>
+    </section>
+
+    <!-- [PROJECTS] -->
+    <section id="projects" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        <div class="projects-container">
+            <div class="section-title">
+                <h2>OUR PROJECTS</h2>
+                <p>원하시는 공간 카테고리를 선택하시면 해당하는 프로젝트가 우선 정렬됩니다.</p>
+            </div>
+
+            <div class="filter-controls" id="filter-tab-container">
+                <button class="active" onclick="filterCategory('all')">ALL</button>
+                <button onclick="filterCategory('fb')">F&B space</button>
+                <button onclick="filterCategory('exhibit')">Exhibition space</button>
+                <button onclick="filterCategory('popup')">Pop-up store</button>
+                <button onclick="filterCategory('office')">Office space</button>
+                <button onclick="filterCategory('medical')">Medical & Lounge</button>
+            </div>
+
+            <div class="portfolio-grid" id="portfolio-grid-main"></div>
+        </div>
+    </section>
+
+    <!-- 내부 다중 이미지 무한 순환형 모달 팝업 구조 -->
+    <div id="dynamic-project-modal" class="project-modal">
+        <div class="modal-content">
+            <span class="close-modal-btn" onclick="closeModal()">&times;</span>
+            <span class="nav-arrow arrow-left" onclick="navigateImages(-1)">&lt;</span>
+            <span class="nav-arrow arrow-right" onclick="navigateImages(1)">&gt;</span>
+            <div class="modal-img-box"><img id="modal-target-img" src="" alt=""></div>
+            <div class="modal-info">
+                <h4 id="modal-target-title"></h4>
+                <p id="modal-target-desc"></p>
+                <div class="slide-counter" id="modal-slide-counter"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- [CONTACT] -->
+    <section id="contact" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        <div class="contact-wrapper">
+            <div class="contact-box">
+                <div class="section-title" style="margin-bottom: 15px;"><h2>CONTACT</h2></div>
+                <div class="map-container">
+                    <div class="map-thumbnail-box"><img src="map_thumb.png" alt="위치"></div>
+                    <a href="https://map.naver.com/v5/search/%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EA%B3%A0%EC%96%91%EC%8B%9C%20%EB%8D%95%EC%96%91%EA%B5%AC%20%ED%98%B8%EC%88%98%EB%A1%9C%2076-14" target="_blank" class="naver-map-btn">네이버지도 →</a>
+                </div>
+                <div class="contact-info-right">
+                    <div class="info-row"><span class="label">EMAIL</span><span class="value"><a href="mailto:yes_design_@naver.com">yes_design_@naver.com</a></span></div>
+                    <div class="info-row"><span class="label">TEL</span><span class="value">031.972.0492</span></div>
+                    <div class="info-row"><span class="label">OFFICE</span><span class="value">경기도 고양시 덕양구 호수로 76-14, B1</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 관리자 모드 섹션 -->
+    <section id="admin" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        
+        <!-- 로그인 창 -->
+        <div id="admin-auth-gate" class="admin-login-container">
+            <h3>🔐 ADMIN LOGIN (Firebase Security)</h3>
+            <input type="text" id="login-id" class="login-input" placeholder="관리자 이메일 주소 입력">
+            <input type="password" id="login-pw" class="login-input" placeholder="비밀번호 입력">
+            <button class="login-btn" id="login-trigger-btn" onclick="checkAdminAuth()">로그인 인증</button>
+        </div>
+
+        <!-- 대시보드 본체 -->
+        <div id="admin-master-dashboard" class="admin-main-dashboard">
+            <div class="admin-wrapper">
+                <div class="section-title">
+                    <h2>ADMIN CONTROL DASHBOARD</h2>
+                    <button class="logout-top-btn" onclick="adminLogout()">로그아웃</button>
+                    <p>다중 이미지를 한 번에 선택하여 자유롭게 프로젝트 항목을 누적 구축합니다.</p>
+                </div>
+
+                <div class="admin-form-box">
+                    <h3 id="form-mode-title">🛠️ 프로젝트 다중 이미지 일괄 등록</h3>
+                    <form id="admin-project-form" onsubmit="handleFormSubmit(event)">
+                        <input type="hidden" id="edit-index" value="-1">
+                        
+                        <div class="form-group">
+                            <label>공간 카테고리 지정</label>
+                            <select id="form-category" required>
+                                <option value="fb">F&B space</option>
+                                <option value="exhibit">Exhibition space</option>
+                                <option value="popup">Pop-up store</option>
+                                <option value="office">Office space</option>
+                                <option value="medical">Medical & Lounge</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>프로젝트 타이틀</label>
+                            <input type="text" id="form-title" placeholder="예: 한남동 파인다이닝 레스토랑" required>
+                        </div>
+                        <div class="form-group">
+                            <label>상세 설명 서브텍스트</label>
+                            <input type="text" id="form-desc" placeholder="예: 평면 동선 기획 및 맞춤형 가구 제작 디렉션 마감" required>
+                        </div>
+                        <div class="form-group">
+                            <label>프로젝트 이미지 등록 (여러 장 다중 선택 가능)</label>
+                            <input type="file" id="form-file-mutiple" accept="image/*" multiple onchange="trackFilesCount()">
+                            <div class="file-count-info" id="file-select-status">선택된 파일 없음</div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" id="form-submit-btn">공간 포트폴리오 저장하기</button>
+                    </form>
+                </div>
+
+                <h3>📋 등록된 전체 프로젝트 항목 제어</h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>대표 슬롯</th>
+                            <th>카테고리</th>
+                            <th>프로젝트 정보</th>
+                            <th>관리 제어</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Firebase Core & Auth SDK 탑재 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDt6s5a8GFu6412Nqtccni8qbqoM-j9aAg",
+            authDomain: "yes-design---portfolio.firebaseapp.com",
+            projectId: "yes-design---portfolio",
+            storageBucket: "yes-design---portfolio.firebasestorage.app",
+            messagingSenderId: "83069857506",
+            appId: "1:83069857506:web:b6cfa6930653eeb49f78bb",
+            measurementId: "G-DRJQC0TGNK"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        const defaultProjects = [
+            { cat: 'fb', title: 'F&B space', desc: '식품 및 식음료 상업 미식 공간 설계', imgs: ['part1.jpg'] },
+            { cat: 'exhibit', title: 'Exhibition space', desc: '몰입감을 극대화한 갤러리 및 기획 전시 공간', imgs: ['part2.jpg'] },
+            { cat: 'popup', title: 'Pop-up store', desc: '트렌디하고 감각적인 브랜드 팝업 스토어 브랜딩', imgs: ['part3.jpg'] },
+            { cat: 'office', title: 'Office space', desc: '업무 효율과 테크니컬 디테일을 살린 오피스 레이아웃', imgs: ['part4.jpg'] },
+            { cat: 'medical', title: 'Medical & Lounge', desc: '프리미엄 클리닉 의료 공간 및 VIP 라운지', imgs: ['part5.jpg'] }
+        ];
+
+        let projects = JSON.parse(localStorage.getItem('yes_design_v2_projects')) || defaultProjects;
+        let currentFilter = 'all';
+        let activeProjectIndex = 0; 
+        let currentImageSlideIndex = 0; 
+        let tempLoadedBase64Array = []; 
+
+        window.onload = function() {
+            renderApp();
+            auth.onAuthStateChanged(user => {
+                if (user) { showDashboard(); } else { hideDashboard(); }
+            });
+        };
+
+        function renderApp() {
+            localStorage.setItem('yes_design_v2_projects', JSON.stringify(projects));
+            renderPortfolioGrid();
+            renderAdminTable();
+        }
+
+        function renderPortfolioGrid() {
+            const grid = document.getElementById('portfolio-grid-main');
+            grid.innerHTML = '';
+            projects.forEach((item, index) => {
+                if (currentFilter !== 'all' && item.cat !== currentFilter) return;
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.setAttribute('onclick', `openModal(${index})`);
+                const mainThumb = (item.imgs && item.imgs.length > 0) ? item.imgs[0] : 'https://placehold.co/600x600?text=No+Image';
+                gridItem.innerHTML = `
+                    <img src="${mainThumb}" onerror="this.src='https://placehold.co/600x600?text=Image+Error'" alt="${item.title}">
+                    <div class="item-overlay">
+                        <h4>${item.title}</h4>
+                        <p>${item.desc}</p>
+                    </div>
+                `;
+                grid.appendChild(gridItem);
+            });
+        }
+
+        function filterCategory(category) {
+            currentFilter = category;
+            const buttons = document.querySelectorAll('#filter-tab-container button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            renderPortfolioGrid();
+        }
+
+        function openModal(index) {
+            activeProjectIndex = index;
+            currentImageSlideIndex = 0; 
+            updateModalView();
+            document.getElementById('dynamic-project-modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('dynamic-project-modal').style.display = 'none'; }
+
+        function updateModalView() {
+            const targetData = projects[activeProjectIndex];
+            if (!targetData) return;
+            const totalImages = targetData.imgs.length;
+            const currentImgSrc = targetData.imgs[currentImageSlideIndex] || 'https://placehold.co/800x600?text=No+Image';
+            document.getElementById('modal-target-img').src = currentImgSrc;
+            document.getElementById('modal-target-title').innerText = targetData.title;
+            document.getElementById('modal-target-desc').innerText = targetData.desc;
+            document.getElementById('modal-slide-counter').innerText = `${currentImageSlideIndex + 1} / ${totalImages}`;
+        }
+
+        function navigateImages(direction) {
+            const targetData = projects[activeProjectIndex];
+            if (!targetData || targetData.imgs.length <= 1) return;
+            currentImageSlideIndex += direction;
+            if (currentImageSlideIndex < 0) { currentImageSlideIndex = targetData.imgs.length - 1; }
+            else if (currentImageSlideIndex >= targetData.imgs.length) { currentImageSlideIndex = 0; }
+            updateModalView();
+        }
+
+        function checkAdminAuth() {
+            const email = document.getElementById('login-id').value;
+            const pw = document.getElementById('login-pw').value;
+            const btn = document.getElementById('login-trigger-btn');
+            if(!email || !pw) { alert('아이디와 비밀번호를 모두 입력해주세요.'); return; }
+            btn.innerText = "보안 검증 중...";
+            btn.disabled = true;
+            auth.signInWithEmailAndPassword(email, pw)
+                .then(() => { btn.innerText = "로그인 인증"; btn.disabled = false; })
+                .catch(() => { alert('인증 실패: 잘못된 계정 정보입니다.'); btn.innerText = "로그인 인증"; btn.disabled = false; });
+        }
+
+        function showDashboard() {
+            document.getElementById('admin-auth-gate').style.display = 'none';
+            document.getElementById('admin-master-dashboard').style.display = 'block';
+        }
+
+        function hideDashboard() {
+            document.getElementById('admin-master-dashboard').style.display = 'none';
+            document.getElementById('admin-auth-gate').style.display = 'block';
+        }
+
+        function adminLogout() {
+            auth.signOut().then(() => {
+                document.getElementById('login-id').value = '';
+                document.getElementById('login-pw').value = '';
+                alert('로그아웃 되었습니다.');
+            });
+        }
+
+        function trackFilesCount() {
+            const fileInput = document.getElementById('form-file-mutiple');
+            const statusBox = document.getElementById('file-select-status');
+            const files = fileInput.files;
+            tempLoadedBase64Array = []; 
+            if (files.length === 0) { statusBox.innerText = "선택된 파일 없음"; return; }
+            if (files.length >= 10) { alert('이미지 파일은 10개 미만으로 선택해 주세요.'); fileInput.value = ''; return; }
+            statusBox.innerText = `총 ${files.length}개의 이미지 로딩 중...`;
+            let readCount = 0;
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempLoadedBase64Array.push(e.target.result);
+                    readCount++;
+                    if(readCount === files.length) { statusBox.innerText = `🎉 총 ${files.length}개 배치 준비 완료.`; }
+                };
+                reader.readAsDataURL(files[i]);
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const editIndex = parseInt(document.getElementById('edit-index').value);
+            const cat = document.getElementById('form-category').value;
+            const title = document.getElementById('form-title').value;
+            const desc = document.getElementById('form-desc').value;
+            let finalImages = [];
+            if (editIndex === -1) {
+                if (tempLoadedBase64Array.length === 0) { alert('최조 1개 이상의 이미지를 선택해 주세요.'); return; }
+                finalImages = tempLoadedBase64Array;
+                projects.push({ cat, title, desc, imgs: finalImages });
+            } else {
+                finalImages = tempLoadedBase64Array.length === 0 ? projects[editIndex].imgs : tempLoadedBase64Array;
+                projects[editIndex] = { cat, title, desc, imgs: finalImages };
+                document.getElementById('edit-index').value = "-1";
+                document.getElementById('form-mode-title').innerText = "🛠️ 프로젝트 다중 이미지 일괄 등록";
+                document.getElementById('form-submit-btn').innerText = "공간 포트폴리오 저장하기";
+                document.getElementById('form-submit-btn').style.background = "#111";
+            }
+            document.getElementById('admin-project-form').reset();
+            document.getElementById('file-select-status').innerText = "선택된 파일 없음";
+            tempLoadedBase64Array = [];
+            renderApp();
+            alert('성공적으로 저장되었습니다.');
+        }
+
+        function editProject(index) {
+            const target = projects[index];
+            document.getElementById('edit-index').value = index;
+            document.getElementById('form-category').value = target.cat;
+            document.getElementById('form-title').value = target.title;
+            document.getElementById('form-desc').value = target.desc;
+            document.getElementById('form-mode-title').innerText = "✏️ 프로젝트 수정 제어";
+            document.getElementById('form-submit-btn').innerText = "수정 완료하기";
+            document.getElementById('form-submit-btn').style.background = "#286090";
+            document.getElementById('file-select-status').innerText = `기존 이미지 ${target.imgs.length}장 유지 중`;
+            document.getElementById('admin-project-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteProject(index) {
+            if (confirm('이 항목을 완전 삭제하시겠습니까?')) { projects.splice(index, 1); renderApp(); }
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+            projects.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let thumbsHTML = '';
+                if(item.imgs && item.imgs.length > 0) {
+                    item.imgs.forEach(imgUrl => { thumbsHTML += `<img src="${imgUrl}" class="admin-thumb" onerror="this.src='https://placehold.co/50?text=Error'">`; });
+                }
+                tr.innerHTML = `
+                    <td><div style="max-width:180px; overflow-x:auto; white-space:nowrap;">${thumbsHTML}</div></td>
+                    <td><span style="text-transform:uppercase; font-weight:700; color:#888;">${item.cat}</span></td>
+                    <td><strong>${item.title}</strong><br><span style="color:#888; font-size:0.75rem;">${item.desc}</span></td>
+                    <td>
+                        <button class="action-btn" style="background:#eee; color:#111;" onclick="editProject(${index})">수정</button>
+                        <button class="action-btn delete-btn" onclick="deleteProject(${index})">삭제</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
