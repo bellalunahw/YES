@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght=300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         /* 전역 레이아웃 및 스타일 고정 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -250,7 +250,7 @@
         
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const database = firebase.database(); // 실시간 데이터베이스 초기화
+        const database = firebase.database(); 
 
         let projectObjects = [];     
         let tempBase64Images = [];   
@@ -258,25 +258,22 @@
         let activeProjectIndex = 0; 
         let currentImageSlideIndex = 0; 
 
-        // 🚀 핵심 변경: 로컬 저장소가 아닌 파이어베이스 클라우드 서버에서 실시간 동기화 리스너 구동
+        // 🚀 초기 로드 및 로그인 실시간 감지 감시자 작동
         window.onload = function() {
             database.ref('portfolio_projects').on('value', (snapshot) => {
                 const data = snapshot.val();
                 projectObjects = [];
                 
                 if (data) {
-                    // 객체 형태의 데이터를 정렬을 위해 배열 구조로 컨버팅
                     Object.keys(data).forEach(key => {
                         projectObjects.push({
                             id: key,
                             ...data[key]
                         });
                     });
-                    // 최신 글이 먼저 위로 오도록 시간 역순 정렬
                     projectObjects.sort((a, b) => b.timestamp - a.timestamp);
                 }
                 
-                // 데이터가 바뀔 때마다 화면과 관리자 테이블 실시간 자동 리렌더링
                 renderPortfolioGrid();
                 renderAdminTable();
             });
@@ -285,6 +282,51 @@
                 if (user) { showDashboard(); } else { hideDashboard(); }
             });
         };
+
+        // 🔐 [추가/복원] 관리자 인증 요청 함수 
+        function checkAdminAuth() {
+            const email = document.getElementById('login-id').value.trim();
+            const pass = document.getElementById('login-pw').value;
+            const btn = document.getElementById('login-trigger-btn');
+
+            if(!email || !pass) { alert('이메일과 비밀번호를 모두 입력해주세요.'); return; }
+            
+            btn.disabled = true;
+            btn.innerText = "로그인 인증 처리 중...";
+
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => {
+                    alert('인증 성공! 관리자 메뉴가 활성화됩니다.');
+                    btn.disabled = false;
+                    btn.innerText = "로그인 인증";
+                })
+                .catch(err => {
+                    alert('인증 실패: ' + err.message);
+                    btn.disabled = false;
+                    btn.innerText = "로그인 인증";
+                });
+        }
+
+        // 🔐 [추가/복원] 로그아웃 함수
+        function adminLogout() {
+            if(confirm('로그아웃 하시겠습니까?')) {
+                auth.signOut().then(() => {
+                    alert('안전하게 로그아웃 되었습니다.');
+                });
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('admin-auth-gate').style.display = 'none';
+            document.getElementById('admin-master-dashboard').style.display = 'block';
+        }
+
+        function hideDashboard() {
+            document.getElementById('admin-auth-gate').style.display = 'block';
+            document.getElementById('admin-master-dashboard').style.display = 'none';
+            document.getElementById('login-id').value = "";
+            document.getElementById('login-pw').value = "";
+        }
 
         function renderPortfolioGrid() {
             const grid = document.getElementById('portfolio-grid-main');
@@ -376,7 +418,7 @@
                         canvas.width = width; canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.70); // 클라우드 동기화 고속 통신을 위해 0.7로 압축 균형 조정
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.70); 
                         tempBase64Images.push(compressedBase64);
                         processedCount++;
                         if (processedCount === files.length) {
@@ -390,7 +432,6 @@
             }
         }
 
-        // 🚀 핵심 변경: 자료를 저장할 때 Firebase Realtime Database 서버로 송신
         function handleFormSubmit(e) {
             e.preventDefault();
             const editId = document.getElementById('edit-id').value;
@@ -408,7 +449,6 @@
             submitBtn.innerText = "☁️ 클라우드 서버에 실시간 연동 중...";
 
             if (editId) {
-                // [기존 항목 수정] 데이터베이스 특정 키 노드 업데이트
                 const targetProj = projectObjects.find(p => p.id === editId);
                 const finalImages = tempBase64Images.length > 0 ? tempBase64Images : targetProj.imgs;
                 
@@ -423,7 +463,6 @@
                 });
 
             } else {
-                // [신규 항목 등록] 데이터베이스 새로운 고유 주소 생성 후 푸시
                 const newProjectRef = database.ref('portfolio_projects').push();
                 newProjectRef.set({
                     cat, title, desc,
@@ -438,7 +477,8 @@
                 });
             }
         }
-// 1. 관리자 폼 초기화 및 모드 전환 함수 (수정 취소 버튼 생성/제거 로직 통합)
+
+        // 1. 관리자 폼 초기화 및 모드 전환 함수
         function resetAdminForm() {
             document.getElementById('edit-id').value = "";
             document.getElementById('form-mode-title').innerText = "🛠️ 프로젝트 다중 이미지 일괄 등록";
@@ -447,7 +487,6 @@
             submitBtn.innerText = "공간 포트폴리오 저장하기";
             submitBtn.disabled = false;
             
-            // 💡 [추가] 동적으로 생성했던 '수정 취소' 버튼이 있다면 제거합니다.
             const existingCancelBtn = document.getElementById('form-cancel-btn');
             if (existingCancelBtn) {
                 existingCancelBtn.remove();
@@ -458,10 +497,15 @@
             tempBase64Images = [];
         }
 
-// 2. 특정 프로젝트 수정 모드 진입 함수 (수정 취소 버튼 동적 생성 기능 추가)
+        // 2. 특정 프로젝트 수정 모드 진입 함수 (수정 취소 버튼 생성 내부 통합 완성형)
         function editProject(index) {
             const target = projectObjects[index];
             if(!target) return;
+
+            // 중복 생성 방지용 선행 삭제
+            const existingCancelBtn = document.getElementById('form-cancel-btn');
+            if (existingCancelBtn) { existingCancelBtn.remove(); }
+
             document.getElementById('edit-id').value = target.id;
             document.getElementById('form-category').value = target.cat;
             document.getElementById('form-title').value = target.title;
@@ -471,17 +515,11 @@
             const submitBtn = document.getElementById('form-submit-btn');
             submitBtn.innerText = "수정 완료 및 클라우드 업데이트";
             
-            const existingCount = target.imgs ? target.imgs.length : 0;
-            document.getElementById('file-select-status').innerText = `기존 이미지 ${existingCount}장 유지 중 (새 파일 선택 시 전체 교체)`;
-            document.getElementById('admin-project-form').scrollIntoView({ behavior: 'smooth' });
-        }
-
-// 💡 [추가] 수정 완료 버튼 바로 옆에 나란히 놓일 '수정 취소' 버튼을 동적으로 생성합니다.
+            // 동적 취소 버튼 구성구역 
             const cancelBtn = document.createElement('button');
             cancelBtn.type = "button";
             cancelBtn.id = "form-cancel-btn";
             cancelBtn.innerText = "수정 취소";
-            // 디자인 일관성을 위해 스타일 부여 (부드러운 회색 톤)
             cancelBtn.style.width = "100%";
             cancelBtn.style.padding = "12px";
             cancelBtn.style.background = "#777777";
@@ -490,19 +528,17 @@
             cancelBtn.style.fontSize = "0.9rem";
             cancelBtn.style.cursor = "pointer";
             cancelBtn.style.fontWeight = "500";
-            cancelBtn.style.marginTop = "8px"; // 버튼 사이의 간격 조정
+            cancelBtn.style.marginTop = "8px";
             cancelBtn.style.transition = "background 0.2s";
             
             cancelBtn.onmouseover = function() { this.style.background = "#555555"; };
             cancelBtn.onmouseout = function() { this.style.background = "#777777"; };
             
-            // 클릭 시 폼을 초기화하고 원래 신규 등록 상태로 리셋
             cancelBtn.onclick = function() {
                 resetAdminForm();
                 alert('수정이 취소되었으며, 신규 등록 모드로 전환되었습니다.');
             };
             
-            // HTML 폼 내부의 제출 버튼 바로 다음에 취소 버튼을 삽입합니다.
             submitBtn.parentNode.insertBefore(cancelBtn, submitBtn.nextSibling);
             
             const existingCount = target.imgs ? target.imgs.length : 0;
@@ -510,7 +546,6 @@
             document.getElementById('admin-project-form').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 🚀 핵심 변경: 삭제 시 파이어베이스 클라우드 서버에서 데이터 제거
         function deleteProject(index) {
             const target = projectObjects[index];
             if (!target) return;
@@ -547,55 +582,6 @@
                     </td>
                 `;
                 tbody.appendChild(tr);
-            });
-        }
-
-        function checkAdminAuth() {
-            const emailInput = document.getElementById('login-id');
-            const pwInput = document.getElementById('login-pw');
-            const btn = document.getElementById('login-trigger-btn');
-            
-            if(!emailInput || !pwInput) return;
-            
-            const email = emailInput.value.trim();
-            const pw = pwInput.value.trim();
-            
-            if(!email || !pw) { 
-                alert('아이디(이메일)와 패스워드를 모두 입력해 주세요.'); 
-                return; 
-            }
-            
-            btn.innerText = "⏳ 보안 통신 인증 중...";
-            btn.disabled = true;
-
-            auth.signInWithEmailAndPassword(email, pw)
-                .then((userCredential) => {
-                    btn.innerText = "로그인 인증";
-                    btn.disabled = false;
-                    alert('🔓 최고 관리자 인증 성공! 제어판이 활성화됩니다.');
-                })
-                .catch((err) => {
-                    btn.innerText = "로그인 인증";
-                    btn.disabled = false;
-                    alert('❌ 인증 실패 안내\n' + err.message);
-                });
-        }
-
-        function showDashboard() {
-            document.getElementById('admin-auth-gate').style.display = 'none';
-            document.getElementById('admin-master-dashboard').style.display = 'block';
-        }
-
-        function hideDashboard() {
-            document.getElementById('admin-master-dashboard').style.display = 'none';
-            document.getElementById('admin-auth-gate').style.display = 'block';
-        }
-
-        function adminLogout() {
-            auth.signOut().then(() => {
-                document.getElementById('login-id').value = '';
-                document.getElementById('login-pw').value = '';
-                alert('안전하게 로그아웃 되었습니다.');
             });
         }
     </script>
