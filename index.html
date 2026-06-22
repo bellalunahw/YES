@@ -115,3 +115,500 @@
         .admin-form-box { background: #f9f9f9; padding: 25px; border: 1px solid #eee; margin-bottom: 40px; }
         .admin-form-box h3 { margin-bottom: 15px; font-size: 1.1rem; }
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 0.8rem; font-weight: 700; color: #666; }
+        .form-group input, .form-group select { padding: 10px; border: 1px solid #ddd; font-size: 0.9rem; width: 100%; }
+        
+        .file-count-info { font-size: 0.8rem; color: #0066cc; font-weight: 500; margin-top: 2px; }
+        .submit-btn { background: #111; color: #fff; border: none; padding: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 500; width: 100%; margin-top: 10px; }
+        .submit-btn:disabled { background: #ccc; cursor: wait; }
+        
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
+        .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        .admin-table th { background: #f4f4f4; font-weight: 700; }
+        .admin-thumb { width: 50px; height: 50px; object-fit: cover; border: 1px solid #ddd; margin-right: 3px; display: inline-block; }
+        .action-btn { padding: 5px 10px; border: none; font-size: 0.75rem; cursor: pointer; margin-right: 5px; }
+        .delete-btn { background: #d9534f; color: #fff; }
+        
+        .logout-top-btn { background: none; border: 1px solid #ddd; padding: 5px 10px; font-size: 0.75rem; cursor: pointer; float: right; margin-top: -30px; }
+
+        /* ----------------------------------------------------------------------
+         * 5. CONTACT 지도 스타일
+         * ---------------------------------------------------------------------- */
+        .contact-wrapper { display: flex; justify-content: center; align-items: center; min-height: 80%; width: 100%; }
+        .contact-box { max-width: 360px; width: 100%; text-align: center; }
+        .map-container { width: 100%; margin: 20px 0; }
+        .map-thumbnail-box { 
+            width: 100%; height: 155px; border: 1px solid #e5e5e5; background-color: #fafafa; 
+            overflow: hidden; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;
+        }
+        .map-thumbnail-box img { 
+            width: 100%; height: 100%; object-fit: contain; 
+            image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; 
+        }
+        .naver-map-btn { display: inline-flex; align-items: center; background-color: #03c75a; color: #fff !important; text-decoration: none; padding: 8px 16px; font-size: 0.8rem; font-weight: 500; border-radius: 4px; }
+        .contact-info-right { width: 100%; border-top: 1px solid #eee; padding-top: 20px; }
+        .info-row { margin-bottom: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .info-row .label { font-size: 0.7rem; font-weight: 700; color: #999; letter-spacing: 1px; }
+        .info-row .value { font-size: 0.85rem; color: #333; }
+        .info-row a { color: inherit; text-decoration: none; }
+        .close-page-btn { position: absolute; top: 25px; right: 30px; font-size: 1.6rem; font-weight: 300; color: #111; text-decoration: none; padding: 5px; z-index: 105; }
+
+        @media (max-width: 900px) {
+            .nav-arrow { font-size: 2rem; }
+            .arrow-left { left: 10px; }
+            .arrow-right { right: 10px; }
+        }
+        @media (max-width: 768px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><a href="#">YES DESIGN</a></div>
+        <nav>
+            <a href="#about">ABOUT</a>
+            <a href="#projects">PROJECTS</a>
+            <a href="#contact">CONTACT</a>
+            <a href="#admin" class="admin-btn">ADMIN</a>
+        </nav>
+    </header>
+
+    <main id="home-hero">
+        <div class="hero-container">
+            <div class="hero-text-full">
+                <h1>We Provide<br>the Essential Value</h1>
+                <p class="sub-slogan">고객의 요구를 넘어, 공간의 가치를 창조하는 파트너</p>
+                <p class="description">인테리어 디자인 기획, 설계 및 시공 전문 디자인 그룹 예스디자인입니다.</p>
+            </div>
+        </div>
+    </main>
+
+    <section id="about" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        <div class="about-content">
+            <h2>ABOUT US</h2>
+            <p style="font-weight: 500; margin-bottom: 25px;">"사용자의 삶을 온전히 담아내는 견고한 세계를 설계합니다."</p>
+            <p>단순한 심미적 마감을 넘어 철저한 공간 설계 분석과 정밀한 테크니컬 디테일 도면화를 구현합니다.</p>
+        </div>
+    </section>
+
+    <section id="projects" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        <div class="projects-container">
+            <div class="section-title">
+                <h2>OUR PROJECTS</h2>
+                <p>원하시는 공간 카테고리를 선택하시면 해당하는 프로젝트가 우선 정렬됩니다.</p>
+            </div>
+
+            <div class="filter-controls" id="filter-tab-container">
+                <button class="active" onclick="filterCategory('all')">ALL</button>
+                <button onclick="filterCategory('fb')">F&B space</button>
+                <button onclick="filterCategory('exhibit')">Exhibition space</button>
+                <button onclick="filterCategory('popup')">Pop-up store</button>
+                <button onclick="filterCategory('office')">Office space</button>
+                <button onclick="filterCategory('medical')">Medical & Lounge</button>
+            </div>
+
+            <div class="portfolio-grid" id="portfolio-grid-main"></div>
+        </div>
+    </section>
+
+    <div id="dynamic-project-modal" class="project-modal">
+        <div class="modal-content">
+            <span class="close-modal-btn" onclick="closeModal()">&times;</span>
+            <span class="nav-arrow arrow-left" onclick="navigateImages(-1)">&lt;</span>
+            <span class="nav-arrow arrow-right" onclick="navigateImages(1)">&gt;</span>
+            <div class="modal-img-box"><img id="modal-target-img" src="" alt=""></div>
+            <div class="modal-info">
+                <h4 id="modal-target-title"></h4>
+                <p id="modal-target-desc"></p>
+                <div class="slide-counter" id="modal-slide-counter"></div>
+            </div>
+        </div>
+    </div>
+
+    <section id="contact" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        <div class="contact-wrapper">
+            <div class="contact-box">
+                <div class="section-title" style="margin-bottom: 15px;"><h2>CONTACT</h2></div>
+                <div class="map-container">
+                    <div class="map-thumbnail-box"><img src="map_thumb.png" alt="위치"></div>
+                    <a href="https://map.naver.com/v5/search/%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EA%B3%A0%EC%96%91%EC%8B%9C%20%EB%8D%95%EC%96%91%EA%B5%AC%20%ED%98%B8%EC%88%98%EB%A1%9C%2076-14" target="_blank" class="naver-map-btn">네이버지도 →</a>
+                </div>
+                <div class="contact-info-right">
+                    <div class="info-row"><span class="label">EMAIL</span><span class="value"><a href="mailto:yes_design_@naver.com">yes_design_@naver.com</a></span></div>
+                    <div class="info-row"><span class="label">TEL</span><span class="value">031.972.0492</span></div>
+                    <div class="info-row"><span class="label">OFFICE</span><span class="value">경기도 고양시 덕양구 호수로 76-14, B1</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="admin" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        
+        <div id="admin-auth-gate" class="admin-login-container">
+            <h3>🔐 ADMIN LOGIN (Firebase Security)</h3>
+            <input type="text" id="login-id" class="login-input" placeholder="관리자 이메일 주소 입력">
+            <input type="password" id="login-pw" class="login-input" placeholder="비밀번호 입력">
+            <button class="login-btn" id="login-trigger-btn" onclick="checkAdminAuth()">로그인 인증</button>
+        </div>
+
+        <div id="admin-master-dashboard" class="admin-main-dashboard">
+            <div class="admin-wrapper">
+                <div class="section-title">
+                    <h2>ADMIN CONTROL DASHBOARD</h2>
+                    <button class="logout-top-btn" onclick="adminLogout()">로그아웃</button>
+                    <p>화면에서 직접 이미지를 다중 선택하고 프로젝트 정보를 실시간 등록/수정 관리합니다.</p>
+                </div>
+
+                <div class="admin-form-box">
+                    <h3 id="form-mode-title">🛠️ 프로젝트 다중 이미지 일괄 등록</h3>
+                    <form id="admin-project-form" onsubmit="handleFormSubmit(event)">
+                        <input type="hidden" id="edit-id" value="">
+                        
+                        <div class="form-group">
+                            <label>공간 카테고리 지정</label>
+                            <select id="form-category" required>
+                                <option value="fb">F&B space</option>
+                                <option value="exhibit">Exhibition space</option>
+                                <option value="popup">Pop-up store</option>
+                                <option value="office">Office space</option>
+                                <option value="medical">Medical & Lounge</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>PROJ TITLE</label>
+                            <input type="text" id="form-title" placeholder="예: 한남동 파인다이닝 레스토랑" required>
+                        </div>
+                        <div class="form-group">
+                            <label>상세 설명 서브텍스트</label>
+                            <input type="text" id="form-desc" placeholder="예: 평면 동선 기획 및 맞춤형 가구 제작 디렉션 마감" required>
+                        </div>
+                        <div class="form-group">
+                            <label>프로젝트 이미지 등록 (여러 장 다중 선택 가능 / 대용량 원본 파일도 실시간 자동 압축 처리됨)</label>
+                            <input type="file" id="form-file-mutiple" accept="image/*" multiple onchange="trackFilesAndResizeCompress()">
+                            <div class="file-count-info" id="file-select-status">선택된 파일 없음</div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" id="form-submit-btn">공간 포트폴리오 저장하기</button>
+                    </form>
+                </div>
+
+                <h3>📋 등록된 전체 프로젝트 항목 제어 (수정/삭제 시 실시간 리스트 반영)</h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>대표 슬롯</th>
+                            <th>카테고리</th>
+                            <th>프로젝트 정보</th>
+                            <th>관리 제어</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <script>
+        // 1. Firebase 인증 설정
+        const firebaseConfig = {
+            apiKey: "AIzaSyDt6s5a8GFu6412Nqtccni8qbqoM-j9aAg",
+            authDomain: "yes-design---portfolio.firebaseapp.com",
+            projectId: "yes-design---portfolio",
+            storageBucket: "yes-design---portfolio.firebasestorage.app",
+            messagingSenderId: "83069857506",
+            appId: "1:83069857506:web:b6cfa6930653eeb49f78bb",
+            measurementId: "G-DRJQC0TGNK"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // 전역 로컬 상태 상태변수
+        let projectObjects = [];     
+        let tempBase64Images = [];   
+        let currentFilter = 'all';
+        let activeProjectIndex = 0; 
+        let currentImageSlideIndex = 0; 
+
+        window.onload = function() {
+            const storedData = localStorage.getItem('YES_DESIGN_PORTFOLIO');
+            if (storedData) {
+                projectObjects = JSON.parse(storedData);
+            } else {
+                projectObjects = [
+                    {
+                        id: "initial_dummy_1",
+                        cat: "fb",
+                        title: "한남동 파인다이닝 레스토랑",
+                        desc: "평면 동선 기획 및 맞춤형 가구 제작 디렉션 마감",
+                        imgs: ["https://placehold.co/600x600?text=F%26B+Space+Sample"]
+                    }
+                ];
+                localStorage.setItem('YES_DESIGN_PORTFOLIO', JSON.stringify(projectObjects));
+            }
+
+            renderPortfolioGrid();
+            renderAdminTable();
+
+            auth.onAuthStateChanged(user => {
+                if (user) { showDashboard(); } else { hideDashboard(); }
+            });
+        };
+
+        // 방문자 포트폴리오 그리드 렌더링
+        function renderPortfolioGrid() {
+            const grid = document.getElementById('portfolio-grid-main');
+            if (!grid) return;
+            grid.innerHTML = '';
+            projectObjects.forEach((item, index) => {
+                if (currentFilter !== 'all' && item.cat !== currentFilter) return;
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.setAttribute('onclick', `openModal(${index})`);
+                const mainThumb = (item.imgs && item.imgs.length > 0) ? item.imgs[0] : 'https://placehold.co/600x600?text=No+Image';
+                gridItem.innerHTML = `
+                    <img src="${mainThumb}" onerror="this.src='https://placehold.co/600x600?text=Image+Error'" alt="${item.title}">
+                    <div class="item-overlay">
+                        <h4>${item.title}</h4>
+                        <p>${item.desc}</p>
+                    </div>
+                `;
+                grid.appendChild(gridItem);
+            });
+        }
+
+        // 카테고리 필터
+        function filterCategory(category) {
+            currentFilter = category;
+            const buttons = document.querySelectorAll('#filter-tab-container button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            renderPortfolioGrid();
+        }
+
+        // 모달 제어
+        function openModal(index) {
+            activeProjectIndex = index;
+            currentImageSlideIndex = 0; 
+            updateModalView();
+            document.getElementById('dynamic-project-modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('dynamic-project-modal').style.display = 'none'; }
+
+        function updateModalView() {
+            const targetData = projectObjects[activeProjectIndex];
+            if (!targetData) return;
+            const totalImages = targetData.imgs ? targetData.imgs.length : 0;
+            const currentImgSrc = (targetData.imgs && targetData.imgs[currentImageSlideIndex]) ? targetData.imgs[currentImageSlideIndex] : 'https://placehold.co/800x600?text=No+Image';
+            document.getElementById('modal-target-img').src = currentImgSrc;
+            document.getElementById('modal-target-title').innerText = targetData.title;
+            document.getElementById('modal-target-desc').innerText = targetData.desc;
+            document.getElementById('modal-slide-counter').innerText = totalImages > 0 ? `${currentImageSlideIndex + 1} / ${totalImages}` : '0 / 0';
+        }
+
+        function navigateImages(direction) {
+            const targetData = projectObjects[activeProjectIndex];
+            if (!targetData || !targetData.imgs || targetData.imgs.length <= 1) return;
+            currentImageSlideIndex += direction;
+            if (currentImageSlideIndex < 0) { currentImageSlideIndex = targetData.imgs.length - 1; }
+            else if (currentImageSlideIndex >= targetData.imgs.length) { currentImageSlideIndex = 0; }
+            updateModalView();
+        }
+
+        // 🌟 초고속 파일 업로드 최적화: 용량이 큰 사진을 브라우저 가상 캔버스를 통해 1200px 크기로 초고속 압축 변환하는 장치
+        function trackFilesAndResizeCompress() {
+            const fileInput = document.getElementById('form-file-mutiple');
+            const statusBox = document.getElementById('file-select-status');
+            const submitBtn = document.getElementById('form-submit-btn');
+            const files = fileInput.files;
+            
+            tempBase64Images = [];
+            if (files.length === 0) { statusBox.innerText = "선택된 파일 없음"; return; }
+            
+            statusBox.innerText = `🔄 [고속 압축 중] 총 ${files.length}개의 포트폴리오 이미지 용량 최적화 중...`;
+            submitBtn.disabled = true;
+
+            let processedCount = 0;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // 가상 캔버스 생성
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        // 최대 가로/세로 해상도를 1200px로 제한하여 용량을 획기적으로 축소
+                        const MAX_WIDTH = 1200;
+                        const MAX_HEIGHT = 1200;
+                        
+                        if (width > height) {
+                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        } else {
+                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // 압축률 75%의 jpeg 데이터로 뽑아내어 로컬스토리지 부하 및 대기시간 제로화
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                        tempBase64Images.push(compressedBase64);
+                        
+                        processedCount++;
+                        if (processedCount === files.length) {
+                            statusBox.innerText = `⚡ 초고속 용량 압축 완료! 총 ${tempBase64Images.length}장의 이미지가 등록 대기 중입니다.`;
+                            submitBtn.disabled = false;
+                        }
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 폼 제출 이벤트 핸들러 (실시간 통합 리스트 동기화)
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('edit-id').value;
+            const cat = document.getElementById('form-category').value;
+            const title = document.getElementById('form-title').value;
+            const desc = document.getElementById('form-desc').value;
+
+            if (!editId && tempBase64Images.length === 0) {
+                alert('최초 포트폴리오 등록 시 최소 1개 이상의 이미지를 업로드해 주세요.');
+                return;
+            }
+
+            if (editId) {
+                // 수정 모드
+                const targetIdx = projectObjects.findIndex(p => p.id === editId);
+                if (targetIdx !== -1) {
+                    const finalImages = tempBase64Images.length > 0 ? tempBase64Images : projectObjects[targetIdx].imgs;
+                    projectObjects[targetIdx] = { id: editId, cat, title, desc, imgs: finalImages };
+                }
+                document.getElementById('edit-id').value = "";
+                document.getElementById('form-mode-title').innerText = "🛠️ 프로젝트 다중 이미지 일괄 등록";
+                document.getElementById('form-submit-btn').style.background = "#111";
+            } else {
+                // 신규 등록 모드
+                const newProject = {
+                    id: "proj_" + Date.now(),
+                    cat, title, desc,
+                    imgs: tempBase64Images
+                };
+                projectObjects.push(newProject);
+            }
+
+            // ⭐ 세이브 후 즉시 방문자 그리드 + 관리자 테이블 리스트 실시간 리프레시 동기화
+            saveAndRefresh();
+
+            document.getElementById('admin-project-form').reset();
+            document.getElementById('file-select-status').innerText = "선택된 파일 없음";
+            tempBase64Images = [];
+            alert('정상적으로 리스트에 실시간 반영 및 등록 완료되었습니다!');
+        }
+
+        // 수정 기능 바인딩
+        function editProject(index) {
+            const target = projectObjects[index];
+            if(!target) return;
+            document.getElementById('edit-id').value = target.id;
+            document.getElementById('form-category').value = target.cat;
+            document.getElementById('form-title').value = target.title;
+            document.getElementById('form-desc').value = target.desc;
+            
+            document.getElementById('form-mode-title').innerText = "✏️ 프로젝트 수정 제어";
+            const submitBtn = document.getElementById('form-submit-btn');
+            submitBtn.innerText = "수정 완료하기";
+            submitBtn.style.background = "#286090";
+            
+            const existingCount = target.imgs ? target.imgs.length : 0;
+            document.getElementById('file-select-status').innerText = `기존 이미지 ${existingCount}장 유지 중 (새 이미지 업로드 시 전체 대체)`;
+            document.getElementById('admin-project-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 삭제 제어
+        function deleteProject(index) {
+            if (confirm('이 포트폴리오를 삭제하시겠습니까?\n삭제 즉시 전체 리스트에서 빠집니다.')) {
+                projectObjects.splice(index, 1);
+                saveAndRefresh();
+                alert('정상적으로 삭제 처리되었습니다.');
+            }
+        }
+
+        // 데이터 통합 세이브 및 화면 전체 실시간 새로고침 장치
+        function saveAndRefresh() {
+            localStorage.setItem('YES_DESIGN_PORTFOLIO', JSON.stringify(projectObjects));
+            renderPortfolioGrid(); // 방문자 PROJECTS 탭 화면 즉시 리프레시
+            renderAdminTable();    // 관리자 하단 테이블 리스트 즉시 리프레시
+        }
+
+        // 관리자용 제어 테이블 렌더링
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-table-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            projectObjects.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let thumbsHTML = '';
+                if(item.imgs && item.imgs.length > 0) {
+                    item.imgs.forEach(imgUrl => { 
+                        thumbsHTML += `<img src="${imgUrl}" class="admin-thumb" onerror="this.src='https://placehold.co/50?text=Error'">`; 
+                    });
+                } else {
+                    thumbsHTML = `<img src="https://placehold.co/50?text=No+Img" class="admin-thumb">`;
+                }
+                tr.innerHTML = `
+                    <td><div style="max-width:180px; overflow-x:auto; white-space:nowrap;">${thumbsHTML}</div></td>
+                    <td><span style="text-transform:uppercase; font-weight:700; color:#888;">${item.cat}</span></td>
+                    <td><strong>${item.title}</strong><br><span style="color:#888; font-size:0.75rem;">${item.desc}</span></td>
+                    <td>
+                        <button class="action-btn" style="background:#eee; color:#111;" onclick="editProject(${index})">수정</button>
+                        <button class="action-btn delete-btn" onclick="deleteProject(${index})">삭제</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Firebase 관리자 인증 처리
+        function checkAdminAuth() {
+            const email = document.getElementById('login-id').value;
+            const pw = document.getElementById('login-pw').value;
+            const btn = document.getElementById('login-trigger-btn');
+            if(!email || !pw) { alert('아이디와 비밀번호를 모두 입력해주세요.'); return; }
+            btn.innerText = "보안 검증 중...";
+            btn.disabled = true;
+            auth.signInWithEmailAndPassword(email, pw)
+                .then(() => { btn.innerText = "로그인 인증"; btn.disabled = false; })
+                .catch((err) => { alert('인증 실패: ' + err.message); btn.innerText = "로그인 인증"; btn.disabled = false; });
+        }
+
+        function showDashboard() {
+            document.getElementById('admin-auth-gate').style.display = 'none';
+            document.getElementById('admin-master-dashboard').style.display = 'block';
+        }
+
+        function hideDashboard() {
+            document.getElementById('admin-master-dashboard').style.display = 'none';
+            document.getElementById('admin-auth-gate').style.display = 'block';
+        }
+
+        function adminLogout() {
+            auth
