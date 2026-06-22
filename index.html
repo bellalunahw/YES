@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YES DESIGN | Portfolio Master</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -79,7 +80,7 @@
         .item-overlay p { font-size: 0.75rem; opacity: 0.8; font-weight: 300; line-height: 1.3; }
 
         /* ----------------------------------------------------------------------
-         * 3. 슬라이더 팝업 모달
+         * 3. 한 프로젝트 내 다중 이미지 순환형 중앙 슬라이더 팝업
          * ---------------------------------------------------------------------- */
         .project-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
@@ -97,44 +98,78 @@
         .nav-arrow:hover { color: rgba(255, 255, 255, 1); }
         .arrow-left { left: -60px; }
         .arrow-right { right: -60px; }
+        
+        /* 인디케이터 (현재 장수 표시) */
         .slide-counter { font-size: 0.8rem; margin-top: 5px; opacity: 0.5; font-weight: 400; }
 
         /* ----------------------------------------------------------------------
-         * 4. 관리자 대시보드 무드 스타일
+         * 4. 관리자 로그인 보안 잠금창 및 대시보드
          * ---------------------------------------------------------------------- */
         .admin-login-container { max-width: 360px; margin: 100px auto; text-align: center; border: 1px solid #eee; padding: 40px 30px; background: #fafafa; }
         .admin-login-container h3 { font-size: 1.2rem; margin-bottom: 20px; letter-spacing: 1px; }
         .login-input { width: 100%; padding: 12px; border: 1px solid #ddd; margin-bottom: 12px; font-size: 0.9rem; }
         .login-btn { width: 100%; padding: 12px; background: #111; color: #fff; border: none; font-weight: 700; cursor: pointer; }
+        .login-btn:disabled { background: #555; cursor: not-allowed; }
 
-        .admin-main-dashboard { display: none; }
-        .admin-wrapper { max-width: 1000px; margin: 0 auto; width: 100%; padding-bottom: 100px; }
+        .admin-main-dashboard { display: none; } 
+        .admin-wrapper { max-width: 900px; margin: 0 auto; width: 100%; }
         .admin-form-box { background: #f9f9f9; padding: 25px; border: 1px solid #eee; margin-bottom: 40px; }
         .admin-form-box h3 { margin-bottom: 15px; font-size: 1.1rem; }
         .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 0.8rem; font-weight: 700; color: #666; }
-        .form-group input, .form-group select, .form-group textarea { padding: 10px; border: 1px solid #ddd; font-size: 0.9rem; width: 100%; font-family: inherit; }
+        .form-group input, .form-group select { padding: 10px; border: 1px solid #ddd; font-size: 0.9rem; width: 100%; }
         
+        .file-count-info { font-size: 0.8rem; color: #666; font-weight: 500; margin-top: 2px; }
         .submit-btn { background: #111; color: #fff; border: none; padding: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 500; width: 100%; margin-top: 10px; }
-        .cancel-btn { background: #999; color: #fff; border: none; padding: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 500; width: 100%; margin-top: 5px; display: none; }
+        .submit-btn:disabled { background: #ccc; cursor: wait; }
         
-        .admin-table-container { overflow-x: auto; margin-top: 20px; }
-        .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 600px; }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
         .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
         .admin-table th { background: #f4f4f4; font-weight: 700; }
-        .admin-thumb { width: 50px; height: 50px; object-fit: cover; border: 1px solid #ddd; margin-right: 3px; display: inline-block; vertical-align: middle; }
-        
-        .action-btn { padding: 6px 12px; border: none; font-size: 0.75rem; cursor: pointer; margin-right: 5px; font-weight: bold; }
-        .edit-btn { background: #0275d8; color: #fff; }
+        .admin-thumb { width: 50px; height: 50px; object-fit: cover; border: 1px solid #ddd; margin-right: 3px; display: inline-block; }
+        .action-btn { padding: 5px 10px; border: none; font-size: 0.75rem; cursor: pointer; margin-right: 5px; }
         .delete-btn { background: #d9534f; color: #fff; }
+        
         .logout-top-btn { background: none; border: 1px solid #ddd; padding: 5px 10px; font-size: 0.75rem; cursor: pointer; float: right; margin-top: -30px; }
 
         /* ----------------------------------------------------------------------
-         * 5. CONTACT 및 기타 스타일 기본 보정
+         * 5. CONTACT 지도 섬네일 픽셀 보정 최적화 스타일
          * ---------------------------------------------------------------------- */
-        .contact-wrapper { max-width: 500px; margin: 40px auto; text-align: center; }
-        .map-thumbnail-box { width: 100%; height: 250px; border: 1px solid #e5e5e5; background-color: #fafafa; overflow: hidden; margin-bottom: 20px; }
-        .map-thumbnail-box img { width: 100%; height: 100%; object-fit: cover; }
+        .contact-wrapper { display: flex; justify-content: center; align-items: center; min-height: 80%; width: 100%; }
+        .contact-box { max-width: 360px; width: 100%; text-align: center; }
+        .map-container { width: 100%; margin: 20px 0; }
+        .map-thumbnail-box { 
+            width: 100%; 
+            height: 155px; 
+            border: 1px solid #e5e5e5; 
+            background-color: #fafafa; 
+            overflow: hidden; 
+            margin-bottom: 10px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .map-thumbnail-box img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            image-rendering: -webkit-optimize-contrast; 
+            image-rendering: crisp-edges; 
+        }
+        .naver-map-btn { display: inline-flex; align-items: center; background-color: #03c75a; color: #fff !important; text-decoration: none; padding: 8px 16px; font-size: 0.8rem; font-weight: 500; border-radius: 4px; }
+        .contact-info-right { width: 100%; border-top: 1px solid #eee; padding-top: 20px; }
+        .info-row { margin-bottom: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .info-row .label { font-size: 0.7rem; font-weight: 700; color: #999; letter-spacing: 1px; }
+        .info-row .value { font-size: 0.85rem; color: #333; }
+        .info-row a { color: inherit; text-decoration: none; }
+        .close-page-btn { position: absolute; top: 25px; right: 30px; font-size: 1.6rem; font-weight: 300; color: #111; text-decoration: none; padding: 5px; z-index: 105; }
+
+        @media (max-width: 900px) {
+            .nav-arrow { font-size: 2rem; }
+            .arrow-left { left: 10px; }
+            .arrow-right { right: 10px; }
+        }
+        @media (max-width: 768px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
@@ -149,390 +184,422 @@
         </nav>
     </header>
 
-    <div id="home-hero">
-        <div class="hero-text-full">
-            <h1>YES DESIGN</h1>
-            <div class="sub-slogan">Designing a solid world that contains the user's life.</div>
-            <p class="description">공간의 가치를 기획하고 삶을 담아내는 디테일한 디자인 솔루션을 제공합니다.</p>
+    <main id="home-hero">
+        <div class="hero-container">
+            <div class="hero-text-full">
+                <h1>We Provide<br>the Essential Value</h1>
+                <p class="sub-slogan">고객의 요구를 넘어, 공간의 가치를 창조하는 파트너</p>
+                <p class="description">인테리어 디자인 기획, 설계 및 시공 전문 디자인 그룹 예스디자인입니다.</p>
+            </div>
         </div>
-    </div>
+    </main>
 
     <section id="about" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
         <div class="about-content">
             <h2>ABOUT US</h2>
-            <p>YES DESIGN은 F&B 인테리어 설계 및 테크니컬 디테일 플래닝을 전문으로 하는 디자인 스튜디오입니다.</p>
-            <p>단순한 도면 작성을 넘어 공간이 가져야 할 독창적인 아이덴티티와 실용성을 조화롭게 설계합니다.</p>
+            <p style="font-weight: 500; margin-bottom: 25px;">"사용자의 삶을 온전히 담아내는 견고한 세계를 설계합니다."</p>
+            <p>단순한 심미적 마감을 넘어 철저한 공간 설계 분석과 정밀한 테크니컬 디테일 도면화를 구현합니다.</p>
         </div>
     </section>
 
     <section id="projects" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
         <div class="projects-container">
             <div class="section-title">
                 <h2>OUR PROJECTS</h2>
-                <p>포트폴리오 리스트</p>
-            </div>
-            
-            <div class="filter-controls">
-                <button class="filter-btn active" onclick="filterProjects('all')">ALL</button>
-                <button class="filter-btn" onclick="filterProjects('fnb')">FOOD & BEVERAGE</button>
-                <button class="filter-btn" onclick="filterProjects('residential')">RESIDENTIAL</button>
-                <button class="filter-btn" onclick="filterProjects('commercial')">COMMERCIAL</button>
+                <p>원하시는 공간 카테고리를 선택하시면 해당하는 프로젝트가 우선 정렬됩니다.</p>
             </div>
 
-            <div class="portfolio-grid" id="portfolioGrid">
-                </div>
+            <div class="filter-controls" id="filter-tab-container">
+                <button class="active" onclick="filterCategory('all')">ALL</button>
+                <button onclick="filterCategory('fb')">F&B space</button>
+                <button onclick="filterCategory('exhibit')">Exhibition space</button>
+                <button onclick="filterCategory('popup')">Pop-up store</button>
+                <button onclick="filterCategory('office')">Office space</button>
+                <button onclick="filterCategory('medical')">Medical & Lounge</button>
+            </div>
+
+            <div class="portfolio-grid" id="portfolio-grid-main"></div>
         </div>
     </section>
 
-    <section id="contact" class="page-section">
-        <div class="contact-wrapper">
-            <h2>CONTACT</h2>
-            <p style="margin-bottom:20px; color:#666;">언제든 공간에 대한 고민을 나누어주세요.</p>
-            <div class="map-thumbnail-box">
-                <div style="width:100%; height:100%; background:#eee; display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:#777;">MAP AREA</div>
-            </div>
-            <p>Email: contact@yesdesign.com</p>
-        </div>
-    </section>
-
-    <section id="admin" class="page-section">
-        <div class="admin-login-container" id="adminLoginBox">
-            <h3>ADMIN LOCK</h3>
-            <input type="password" id="adminPassword" class="login-input" placeholder="비밀번호를 입력하세요">
-            <button class="login-btn" onclick="checkAdminPassword()">LOGIN</button>
-        </div>
-
-        <div class="admin-main-dashboard" id="adminDashboard">
-            <div class="admin-wrapper">
-                <button class="logout-top-btn" onclick="adminLogout()">LOGOUT</button>
-                <h2 style="margin-bottom: 20px;" id="formTitle">PROJECT MANAGEMENT (등록 모드)</h2>
-                
-                <div class="admin-form-box">
-                    <input type="hidden" id="editProjectId">
-                    <div class="form-group">
-                        <label>프로젝트명</label>
-                        <input type="text" id="projectTitle" placeholder="프로젝트 이름을 입력하세요.">
-                    </div>
-                    <div class="form-group">
-                        <label>카테고리</label>
-                        <select id="projectCategory">
-                            <option value="fnb">FOOD & BEVERAGE</option>
-                            <option value="residential">RESIDENTIAL</option>
-                            <option value="commercial">COMMERCIAL</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>설명</label>
-                        <textarea id="projectDesc" rows="3" placeholder="공간 및 디자인에 대한 세부 설명을 입력하세요."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>이미지 다중 등록 (Ctrl/Shift 키 혹은 드래그로 여러 개 선택 가능)</label>
-                        <input type="file" id="projectImages" multiple accept="image/*">
-                        <div class="file-count-info" id="fileCountInfo">선택된 이미지 없음 (수정 시 미첨부 시 기존 이미지 유지)</div>
-                    </div>
-                    <button class="submit-btn" id="submitFormBtn" onclick="saveProject()">프로젝트 저장하기</button>
-                    <button class="cancel-btn" id="cancelEditBtn" onclick="resetForm()">수정 취소</button>
-                </div>
-
-                <h3>등록된 프로젝트 목록</h3>
-                <div class="admin-table-container">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>썸네일</th>
-                                <th>프로젝트명</th>
-                                <th>카테고리</th>
-                                <th>설명 요약</th>
-                                <th>관리기능</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminProjectTableBody">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="project-modal" id="projectModal">
+    <div id="dynamic-project-modal" class="project-modal">
         <div class="modal-content">
             <span class="close-modal-btn" onclick="closeModal()">&times;</span>
-            <div class="nav-arrow arrow-left" onclick="prevSlide()">&lt;</div>
-            <div class="modal-img-box">
-                <img id="modalMainImg" src="" alt="Portfolio Large">
-            </div>
-            <div class="nav-arrow arrow-right" onclick="nextSlide()">&gt;</div>
+            <span class="nav-arrow arrow-left" onclick="navigateImages(-1)">&lt;</span>
+            <span class="nav-arrow arrow-right" onclick="navigateImages(1)">&gt;</span>
+            <div class="modal-img-box"><img id="modal-target-img" src="" alt=""></div>
             <div class="modal-info">
-                <h4 id="modalTitle">Project Title</h4>
-                <p id="modalDesc">Project description text goes here.</p>
-                <div class="slide-counter" id="slideCounter">1 / 1</div>
+                <h4 id="modal-target-title"></h4>
+                <p id="modal-target-desc"></p>
+                <div class="slide-counter" id="modal-slide-counter"></div>
             </div>
         </div>
     </div>
 
-    <script>
-        // 전역 상태 변수 관리
-        let currentProjects = JSON.parse(localStorage.getItem('yes_design_projects')) || [];
-        let activeModalImages = [];
-        let currentSlideIndex = 0;
+    <section id="contact" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        <div class="contact-wrapper">
+            <div class="contact-box">
+                <div class="section-title" style="margin-bottom: 15px;"><h2>CONTACT</h2></div>
+                <div class="map-container">
+                    <div class="map-thumbnail-box"><img src="map_thumb.png" alt="위치"></div>
+                    <a href="https://map.naver.com/v5/search/%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EA%B3%A0%EC%96%91%EC%8B%9C%20%EB%8D%95%EC%96%91%EA%B5%AC%20%ED%98%B8%EC%88%98%EB%A1%9C%2076-14" target="_blank" class="naver-map-btn">네이버지도 →</a>
+                </div>
+                <div class="contact-info-right">
+                    <div class="info-row"><span class="label">EMAIL</span><span class="value"><a href="mailto:yes_design_@naver.com">yes_design_@naver.com</a></span></div>
+                    <div class="info-row"><span class="label">TEL</span><span class="value">031.972.0492</span></div>
+                    <div class="info-row"><span class="label">OFFICE</span><span class="value">경기도 고양시 덕양구 호수로 76-14, B1</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        // 페이지 초기 구동 로드
+    <section id="admin" class="page-section">
+        <a href="#" class="close-page-btn">&times;</a>
+        
+        <div id="admin-auth-gate" class="admin-login-container">
+            <h3>🔐 ADMIN LOGIN (Firebase Security)</h3>
+            <input type="text" id="login-id" class="login-input" placeholder="관리자 이메일 주소 입력">
+            <input type="password" id="login-pw" class="login-input" placeholder="비밀번호 입력">
+            <button class="login-btn" id="login-trigger-btn" onclick="checkAdminAuth()">로그인 인증</button>
+        </div>
+
+        <div id="admin-master-dashboard" class="admin-main-dashboard">
+            <div class="admin-wrapper">
+                <div class="section-title">
+                    <h2>ADMIN CONTROL DASHBOARD</h2>
+                    <button class="logout-top-btn" onclick="adminLogout()">로그아웃</button>
+                    <p>다중 이미지를 한 번에 선택하여 자유롭게 프로젝트 항목을 누적 구축합니다.</p>
+                </div>
+
+                <div class="admin-form-box">
+                    <h3 id="form-mode-title">🛠️ 프로젝트 다중 이미지 일괄 등록</h3>
+                    <form id="admin-project-form" onsubmit="handleFormSubmit(event)">
+                        <input type="hidden" id="edit-id" value="">
+                        
+                        <div class="form-group">
+                            <label>공간 카테고리 지정</label>
+                            <select id="form-category" required>
+                                <option value="fb">F&B space</option>
+                                <option value="exhibit">Exhibition space</option>
+                                <option value="popup">Pop-up store</option>
+                                <option value="office">Office space</option>
+                                <option value="medical">Medical & Lounge</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>PROJ TITLE</label>
+                            <input type="text" id="form-title" placeholder="예: 한남동 파인다이닝 레스토랑" required>
+                        </div>
+                        <div class="form-group">
+                            <label>상세 설명 서브텍스트</label>
+                            <input type="text" id="form-desc" placeholder="예: 평면 동선 기획 및 맞춤형 가구 제작 디렉션 마감" required>
+                        </div>
+                        <div class="form-group">
+                            <label>프로젝트 이미지 등록 (여러 장 다중 선택 가능, 10개 미만)</label>
+                            <input type="file" id="form-file-mutiple" accept="image/*" multiple onchange="trackFilesCount()">
+                            <div class="file-count-info" id="file-select-status">선택된 파일 없음</div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" id="form-submit-btn">공간 포트폴리오 저장하기</button>
+                    </form>
+                </div>
+
+                <h3>📋 등록된 전체 프로젝트 항목 제어</h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>대표 슬롯</th>
+                            <th>카테고리</th>
+                            <th>프로젝트 정보</th>
+                            <th>관리 제어</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+    <script>
+        // 1. Firebase 설정 구성
+        const firebaseConfig = {
+            apiKey: "AIzaSyDt6s5a8GFu6412Nqtccni8qbqoM-j9aAg",
+            authDomain: "yes-design---portfolio.firebaseapp.com",
+            projectId: "yes-design---portfolio",
+            storageBucket: "yes-design---portfolio.firebasestorage.app",
+            messagingSenderId: "83069857506",
+            appId: "1:83069857506:web:b6cfa6930653eeb49f78bb",
+            measurementId: "G-DRJQC0TGNK"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        const storage = firebase.storage();
+
+        // 전역 상태 관리 변수들
+        let projectObjects = [];     // DB에서 내려받은 순수 객체 배열 (id 속성 포함)
+        let selectedFiles = [];      // 업로드 대기중인 실제 File 객체 배열
+        let currentFilter = 'all';
+        let activeProjectIndex = 0; 
+        let currentImageSlideIndex = 0; 
+
         window.onload = function() {
-            renderFrontGrid();
-            renderAdminTable();
-            
-            // 관리자 로그인 상태 분기 체크
-            if(sessionStorage.getItem('is_admin_auth') === 'true') {
-                showAdminDashboard(true);
-            }
+            // 실시간 리스너 연동: DB 데이터 변경 시 렌더링 함수 자동 트리거
+            database.ref('projects').on('value', (snapshot) => {
+                const data = snapshot.val();
+                projectObjects = [];
+                if (data) {
+                    for (let key in data) {
+                        projectObjects.push({ id: key, ...data[key] });
+                    }
+                }
+                renderPortfolioGrid();
+                renderAdminTable();
+            });
+
+            auth.onAuthStateChanged(user => {
+                if (user) { showDashboard(); } else { hideDashboard(); }
+            });
         };
 
-        /* ----------------------------------
-         * [ADMIN] 인증 파트
-         * ---------------------------------- */
-        function checkAdminPassword() {
-            const pass = document.getElementById('adminPassword').value;
-            if(pass === '1234') { // 기본 초기 비밀번호 예시 1234
-                sessionStorage.setItem('is_admin_auth', 'true');
-                showAdminDashboard(true);
-                document.getElementById('adminPassword').value = '';
-            } else {
-                alert('비밀번호가 올바르지 않습니다.');
-            }
+        // 방문자 포트폴리오 그리드 렌더링
+        function renderPortfolioGrid() {
+            const grid = document.getElementById('portfolio-grid-main');
+            grid.innerHTML = '';
+            projectObjects.forEach((item, index) => {
+                if (currentFilter !== 'all' && item.cat !== currentFilter) return;
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.setAttribute('onclick', `openModal(${index})`);
+                const mainThumb = (item.imgs && item.imgs.length > 0) ? item.imgs[0] : 'https://placehold.co/600x600?text=No+Image';
+                gridItem.innerHTML = `
+                    <img src="${mainThumb}" onerror="this.src='https://placehold.co/600x600?text=Image+Error'" alt="${item.title}">
+                    <div class="item-overlay">
+                        <h4>${item.title}</h4>
+                        <p>${item.desc}</p>
+                    </div>
+                `;
+                grid.appendChild(gridItem);
+            });
+        }
+
+        // 카테고리 탭 필터링 제어
+        function filterCategory(category) {
+            currentFilter = category;
+            const buttons = document.querySelectorAll('#filter-tab-container button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            renderPortfolioGrid();
+        }
+
+        // 모달 팝업 열기
+        function openModal(index) {
+            activeProjectIndex = index;
+            currentImageSlideIndex = 0; 
+            updateModalView();
+            document.getElementById('dynamic-project-modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('dynamic-project-modal').style.display = 'none'; }
+
+        // 순환형 모달 데이터 업데이트
+        function updateModalView() {
+            const targetData = projectObjects[activeProjectIndex];
+            if (!targetData) return;
+            const totalImages = targetData.imgs ? targetData.imgs.length : 0;
+            const currentImgSrc = (targetData.imgs && targetData.imgs[currentImageSlideIndex]) ? targetData.imgs[currentImageSlideIndex] : 'https://placehold.co/800x600?text=No+Image';
+            document.getElementById('modal-target-img').src = currentImgSrc;
+            document.getElementById('modal-target-title').innerText = targetData.title;
+            document.getElementById('modal-target-desc').innerText = targetData.desc;
+            document.getElementById('modal-slide-counter').innerText = totalImages > 0 ? `${currentImageSlideIndex + 1} / ${totalImages}` : '0 / 0';
+        }
+
+        // 이미지 순환 화살표 네비게이션
+        function navigateImages(direction) {
+            const targetData = projectObjects[activeProjectIndex];
+            if (!targetData || !targetData.imgs || targetData.imgs.length <= 1) return;
+            currentImageSlideIndex += direction;
+            if (currentImageSlideIndex < 0) { currentImageSlideIndex = targetData.imgs.length - 1; }
+            else if (currentImageSlideIndex >= targetData.imgs.length) { currentImageSlideIndex = 0; }
+            updateModalView();
+        }
+
+        // 관리자 인증 처리
+        function checkAdminAuth() {
+            const email = document.getElementById('login-id').value;
+            const pw = document.getElementById('login-pw').value;
+            const btn = document.getElementById('login-trigger-btn');
+            if(!email || !pw) { alert('아이디와 비밀번호를 모두 입력해주세요.'); return; }
+            btn.innerText = "보안 검증 중...";
+            btn.disabled = true;
+            auth.signInWithEmailAndPassword(email, pw)
+                .then(() => { btn.innerText = "로그인 인증"; btn.disabled = false; })
+                .catch((err) => { alert('인증 실패: ' + err.message); btn.innerText = "로그인 인증"; btn.disabled = false; });
+        }
+
+        function showDashboard() {
+            document.getElementById('admin-auth-gate').style.display = 'none';
+            document.getElementById('admin-master-dashboard').style.display = 'block';
+        }
+
+        function hideDashboard() {
+            document.getElementById('admin-master-dashboard').style.display = 'none';
+            document.getElementById('admin-auth-gate').style.display = 'block';
         }
 
         function adminLogout() {
-            sessionStorage.removeItem('is_admin_auth');
-            showAdminDashboard(false);
-        }
-
-        function showAdminDashboard(isAuth) {
-            if(isAuth) {
-                document.getElementById('adminLoginBox').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'block';
-            } else {
-                document.getElementById('adminLoginBox').style.display = 'block';
-                document.getElementById('adminDashboard').style.display = 'none';
-            }
-        }
-
-        /* ----------------------------------
-         * [CRUD] 다중 이미지 로드 및 프로젝트 영구 저장/수정 로직
-         * ---------------------------------- */
-        async function saveProject() {
-            const idField = document.getElementById('editProjectId').value;
-            const title = document.getElementById('projectTitle').value;
-            const category = document.getElementById('projectCategory').value;
-            const desc = document.getElementById('projectDesc').value;
-            const fileInput = document.getElementById('projectImages');
-
-            if(!title.trim()) { alert('프로젝트 명을 입력해주세요.'); return; }
-
-            let imageBase64Array = [];
-
-            // 다중 이미지 읽기 프로세스 처리
-            if (fileInput.files.length > 0) {
-                for(let i=0; i<fileInput.files.length; i++) {
-                    const base64Str = await convertFileToBase64(fileInput.files[i]);
-                    imageBase64Array.push(base64Str);
-                }
-            }
-
-            if(idField) {
-                // [UPDATE MODE] 기존 데이터 수정
-                currentProjects = currentProjects.map(proj => {
-                    if(proj.id === parseInt(idField)) {
-                        return {
-                            id: proj.id,
-                            title: title,
-                            category: category,
-                            desc: desc,
-                            // 새 파일을 업로드하지 않았다면 기존 이미지 유지
-                            images: imageBase64Array.length > 0 ? imageBase64Array : proj.images 
-                        };
-                    }
-                    return proj;
-                });
-                alert('프로젝트 수정을 완료했습니다.');
-            } else {
-                // [CREATE MODE] 신규 등록
-                if(imageBase64Array.length === 0) {
-                    alert('최소 1장 이상의 프로젝트 이미지를 등록해야 합니다.');
-                    return;
-                }
-                const newProject = {
-                    id: Date.now(), // 유니크 아이디 발급
-                    title: title,
-                    category: category,
-                    desc: desc,
-                    images: imageBase64Array
-                };
-                currentProjects.push(newProject);
-                alert('새 포트폴리오를 성공적으로 등록했습니다.');
-            }
-
-            localStorage.setItem('yes_design_projects', JSON.stringify(currentProjects));
-            resetForm();
-            renderFrontGrid();
-            renderAdminTable();
-        }
-
-        // 파일 헬퍼 함수
-        function convertFileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
+            auth.signOut().then(() => {
+                document.getElementById('login-id').value = '';
+                document.getElementById('login-pw').value = '';
+                alert('안전하게 로그아웃 되었습니다.');
             });
         }
 
-        // 특정 데이터 수정 폼 연결 바인딩 (리스트별 수정기능)
-        function openEditMode(id) {
-            const project = currentProjects.find(p => p.id === id);
-            if(!project) return;
-
-            document.getElementById('formTitle').innerText = "PROJECT MANAGEMENT (수정 모드)";
-            document.getElementById('editProjectId').value = project.id;
-            document.getElementById('projectTitle').value = project.title;
-            document.getElementById('projectCategory').value = project.category;
-            document.getElementById('projectDesc').value = project.desc;
-            document.getElementById('fileCountInfo').innerText = `기존에 등록된 이미지 수: ${project.images.length}장 (수정 무변경시 파일 미선택)`;
+        // 선택 파일 개수 검증 트래킹
+        function trackFilesCount() {
+            const fileInput = document.getElementById('form-file-mutiple');
+            const statusBox = document.getElementById('file-select-status');
+            const files = fileInput.files;
+            selectedFiles = [];
+            if (files.length === 0) { statusBox.innerText = "선택된 파일 없음"; return; }
+            if (files.length >= 10) { alert('이미지 파일은 10개 미만으로 선택해 주세요.'); fileInput.value = ''; statusBox.innerText = "선택된 파일 없음"; return; }
             
-            document.getElementById('submitFormBtn').innerText = "변경 사항 업데이트";
-            document.getElementById('cancelEditBtn').style.display = 'block';
-            
-            // 폼 입력 최상단 시야 이동
-            document.getElementById('admin').scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // 삭제 처리 기능
-        function deleteProject(id) {
-            if(confirm('정말로 해당 포트폴리오 항목을 완전히 삭제하시겠습니까?')) {
-                currentProjects = currentProjects.filter(p => p.id !== id);
-                localStorage.setItem('yes_design_projects', JSON.stringify(currentProjects));
-                renderFrontGrid();
-                renderAdminTable();
+            for(let i=0; i<files.length; i++) {
+                selectedFiles.push(files[i]);
             }
+            statusBox.innerText = `🎉 총 ${selectedFiles.length}개의 파일이 대기 중입니다.`;
         }
 
-        // 폼 초기화 리셋
-        function resetForm() {
-            document.getElementById('formTitle').innerText = "PROJECT MANAGEMENT (등록 모드)";
-            document.getElementById('editProjectId').value = '';
-            document.getElementById('projectTitle').value = '';
-            document.getElementById('projectCategory').value = 'fnb';
-            document.getElementById('projectDesc').value = '';
-            document.getElementById('projectImages').value = '';
-            document.getElementById('fileCountInfo').innerText = '선택된 이미지 없음';
-            document.getElementById('submitFormBtn').innerText = "프로젝트 저장하기";
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
+        // 핵심: Firebase Storage 업로드 및 Realtime Database 쓰기 비동기 트랜잭션 함수
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('form-submit-btn');
+            const editId = document.getElementById('edit-id').value;
+            const cat = document.getElementById('form-category').value;
+            const title = document.getElementById('form-title').value;
+            const desc = document.getElementById('form-desc').value;
 
-        /* ----------------------------------
-         * [RENDER] 프론트 화면 그리드 & 백엔드 리스트 리스트업
-         * ---------------------------------- */
-        function renderFrontGrid(filter = 'all') {
-            const gridContainer = document.getElementById('portfolioGrid');
-            gridContainer.innerHTML = '';
-
-            const filtered = filter === 'all' ? currentProjects : currentProjects.filter(p => p.category === filter);
-
-            if(filtered.length === 0) {
-                gridContainer.innerHTML = `<div style="grid-column: 1/-1; padding:100px 0; text-align:center; color:#999;">등록된 작품이 없습니다.</div>`;
+            // 1. 유효성 예외 처리
+            if (!editId && selectedFiles.length === 0) {
+                alert('최초 등록 시 최소 1개 이상의 이미지 파일을 선택해 주세요.');
                 return;
             }
 
-            filtered.forEach(proj => {
-                const itemHTML = `
-                    <div class="grid-item" onclick="openLightbox(${proj.id})">
-                        <img src="${proj.images[0]}" alt="${proj.title}">
-                        <div class="item-overlay">
-                            <h4>${proj.title}</h4>
-                            <p>${proj.category.toUpperCase()}</p>
-                        </div>
-                    </div>
-                `;
-                gridContainer.innerHTML += itemHTML;
-            });
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerText = "서버 업로드 및 동기화 중...";
+
+                let finalImagesUrls = [];
+
+                if (selectedFiles.length > 0) {
+                    // 새 파일이 지정된 경우 -> Storage 업로드 후 URL 배열 추출
+                    const uploadPromises = selectedFiles.map(file => {
+                        const fileRef = storage.ref().child(`portfolio/${Date.now()}_${file.name}`);
+                        return fileRef.put(file).then(snapshot => snapshot.ref.getDownloadURL());
+                    });
+                    finalImagesUrls = await Promise.all(uploadPromises);
+                } else if (editId) {
+                    // 수정이면서 파일을 새로 선택하지 않은 경우 -> 기존 이미지 URL 유지
+                    const originalProject = projectObjects.find(p => p.id === editId);
+                    if (originalProject) finalImagesUrls = originalProject.imgs || [];
+                }
+
+                const projectData = { cat, title, desc, imgs: finalImagesUrls };
+
+                if (!editId) {
+                    // 신규 등록 데이터 트랜잭션
+                    await database.ref('projects').push(projectData);
+                } else {
+                    // 기존 데이터 덮어쓰기 업데이트
+                    await database.ref(`projects/${editId}`).set(projectData);
+                    // 폼 리셋 및 초기화
+                    document.getElementById('edit-id').value = "";
+                    document.getElementById('form-mode-title').innerText = "🛠️ 프로젝트 다중 이미지 일괄 등록";
+                    submitBtn.style.background = "#111";
+                }
+
+                // 성공 폼 완전 초기화
+                document.getElementById('admin-project-form').reset();
+                document.getElementById('file-select-status').innerText = "선택된 파일 없음";
+                selectedFiles = [];
+                alert('성공적으로 실시간 데이터베이스와 동기화되었습니다.');
+
+            } catch (error) {
+                console.error(error);
+                alert('트랜잭션 오류 발생: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = editId ? "수정 완료하기" : "공간 포트폴리오 저장하기";
+            }
         }
 
-        function filterProjects(category) {
-            // 버튼 액티브 클래스 제어
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        // 수정 버튼 클릭 핸들러
+        function editProject(index) {
+            const target = projectObjects[index];
+            if(!target) return;
+            document.getElementById('edit-id').value = target.id;
+            document.getElementById('form-category').value = target.cat;
+            document.getElementById('form-title').value = target.title;
+            document.getElementById('form-desc').value = target.desc;
             
-            renderFrontGrid(category);
+            document.getElementById('form-mode-title').innerText = "✏️ 프로젝트 수정 제어";
+            const submitBtn = document.getElementById('form-submit-btn');
+            submitBtn.innerText = "수정 완료하기";
+            submitBtn.style.background = "#286090";
+            
+            const existingCount = target.imgs ? target.imgs.length : 0;
+            document.getElementById('file-select-status').innerText = `기존 이미지 ${existingCount}장 서버 유지 중 (새로 선택 시 기존 파일 전체 대체됨)`;
+            document.getElementById('admin-project-form').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 카테고리별 프로젝트 리스트 테이블화 구현 완료
+        // 완전 삭제 핸들러
+        async function deleteProject(index) {
+            const target = projectObjects[index];
+            if (!target) return;
+            if (confirm('이 항목을 완전 삭제하시겠습니까?\n(데이터베이스에서 즉시 삭제되며 복구할 수 없습니다.)')) {
+                try {
+                    await database.ref(`projects/${target.id}`).remove();
+                    alert('성공적으로 삭제되었습니다.');
+                } catch (error) {
+                    alert('삭제 중 문제가 발생했습니다: ' + error.message);
+                }
+            }
+        }
+
+        // 관리자용 관리 제어 테이블 업데이트
         function renderAdminTable() {
-            const tableBody = document.getElementById('adminProjectTableBody');
-            tableBody.innerHTML = '';
-
-            if(currentProjects.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999; padding:30px;">관리 목록에 동기화된 프로젝트가 없습니다.</td></tr>`;
-                return;
-            }
-
-            currentProjects.forEach(proj => {
-                // 다중이미지 썸네일 세트 나열화 처리
-                let thumbGroupHTML = '';
-                proj.images.forEach(img => {
-                    thumbGroupHTML += `<img src="${img}" class="admin-thumb">`;
-                });
-
-                const rowHTML = `
-                    <tr>
-                        <td><div style="white-space:nowrap; max-width:220px; overflow-x:auto;">${thumbGroupHTML}</div></td>
-                        <td style="font-weight:700;">${proj.title}</td>
-                        <td><span style="background:#eee; padding:3px 7px; border-radius:3px; font-size:0.75rem;">${proj.category.toUpperCase()}</span></td>
-                        <td><div style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${proj.desc || '-'}</div></td>
-                        <td>
-                            <button class="action-btn edit-btn" onclick="openEditMode(${proj.id})">수정</button>
-                            <button class="action-btn delete-btn" onclick="deleteProject(${proj.id})">삭제</button>
-                        </td>
-                    </tr>
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+            projectObjects.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let thumbsHTML = '';
+                if(item.imgs && item.imgs.length > 0) {
+                    item.imgs.forEach(imgUrl => { 
+                        thumbsHTML += `<img src="${imgUrl}" class="admin-thumb" onerror="this.src='https://placehold.co/50?text=Error'">`; 
+                    });
+                } else {
+                    thumbsHTML = `<img src="https://placehold.co/50?text=No+Img" class="admin-thumb">`;
+                }
+                tr.innerHTML = `
+                    <td><div style="max-width:180px; overflow-x:auto; white-space:nowrap;">${thumbsHTML}</div></td>
+                    <td><span style="text-transform:uppercase; font-weight:700; color:#888;">${item.cat}</span></td>
+                    <td><strong>${item.title}</strong><br><span style="color:#888; font-size:0.75rem;">${item.desc}</span></td>
+                    <td>
+                        <button class="action-btn" style="background:#eee; color:#111;" onclick="editProject(${index})">수정</button>
+                        <button class="action-btn delete-btn" onclick="deleteProject(${index})">삭제</button>
+                    </td>
                 `;
-                tableBody.innerHTML += rowHTML;
+                tbody.appendChild(tr);
             });
-        }
-
-        /* ----------------------------------
-         * [SLIDER] 한 프로젝트 내 다중 이미지 순환 라이트박스 로직
-         * ---------------------------------- */
-        function openLightbox(id) {
-            const project = currentProjects.find(p => p.id === id);
-            if(!project) return;
-
-            activeModalImages = project.images;
-            currentSlideIndex = 0;
-
-            document.getElementById('modalTitle').innerText = project.title;
-            document.getElementById('modalDesc').innerText = project.desc || '';
-            
-            updateSlideView();
-            document.getElementById('projectModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('projectModal').style.display = 'none';
-        }
-
-        function updateSlideView() {
-            document.getElementById('modalMainImg').src = activeModalImages[currentSlideIndex];
-            document.getElementById('slideCounter').innerText = `${currentSlideIndex + 1} / ${activeModalImages.length}`;
-        }
-
-        function nextSlide() {
-            currentSlideIndex = (currentSlideIndex + 1) % activeModalImages.length;
-            updateSlideView();
-        }
-
-        function prevSlide() {
-            currentSlideIndex = (currentSlideIndex - 1 + activeModalImages.length) % activeModalImages.length;
-            updateSlideView();
         }
     </script>
 </body>
