@@ -283,31 +283,49 @@
             });
         };
 
-        // 🔐 [추가/복원] 관리자 인증 요청 함수 
+        // 🔐 관리자 인증 요청 함수 (알림 강화를 위한 팝업 단계 추가)
         function checkAdminAuth() {
             const email = document.getElementById('login-id').value.trim();
             const pass = document.getElementById('login-pw').value;
             const btn = document.getElementById('login-trigger-btn');
 
-            if(!email || !pass) { alert('이메일과 비밀번호를 모두 입력해주세요.'); return; }
+            if(!email || !pass) { 
+                alert('⚠️ 경고\n이메일과 비밀번호를 모두 입력하셔야 인증을 진행할 수 있습니다.'); 
+                return; 
+            }
             
+            // 팝업 단계 1: 서버 통신 시작을 팝업으로 명시
+            alert(`🔄 [1단계: 보안 검증 시작]\n입력하신 계정(${email}) 정보를 바탕으로 Firebase 클라우드 보안 인증 통신을 시작합니다.`);
+
             btn.disabled = true;
             btn.innerText = "로그인 인증 처리 중...";
 
             auth.signInWithEmailAndPassword(email, pass)
                 .then(() => {
-                    alert('인증 성공! 관리자 메뉴가 활성화됩니다.');
+                    // 팝업 단계 2: 성공 알림
+                    alert('🎉 [2단계: 인증 최종 성공]\n관리자 권한 확인이 완료되었습니다! 마스터 제어 대시보드를 활성화합니다.');
                     btn.disabled = false;
                     btn.innerText = "로그인 인증";
                 })
                 .catch(err => {
-                    alert('인증 실패: ' + err.message);
                     btn.disabled = false;
                     btn.innerText = "로그인 인증";
+                    
+                    // 팝업 단계 2-실패: 원인을 정확하게 사용자에게 경고창으로 제공
+                    let korMessage = "이메일 주소 형식 또는 비밀번호가 잘못되었습니다.";
+                    if (err.code === "auth/user-not-found") {
+                        korMessage = "Firebase에 등록되지 않은 관리자 이메일 주소입니다.";
+                    } else if (err.code === "auth/wrong-password") {
+                        korMessage = "비밀번호가 올바르지 않습니다.";
+                    } else if (err.code === "auth/operation-not-allowed") {
+                        korMessage = "Firebase 콘솔에서 'Email/Password' 인증 방식이 비활성화 상태입니다. 구글 콘솔 확인이 필요합니다.";
+                    }
+                    
+                    alert(`❌ [인증 실패 안내]\n서버 응답 결과 코드가 정상적이지 않습니다.\n\n사유: ${korMessage}\n(오류 내용: ${err.message})`);
                 });
         }
 
-        // 🔐 [추가/복원] 로그아웃 함수
+        // 🔐 로그아웃 함수
         function adminLogout() {
             if(confirm('로그아웃 하시겠습니까?')) {
                 auth.signOut().then(() => {
@@ -478,7 +496,6 @@
             }
         }
 
-        // 1. 관리자 폼 초기화 및 모드 전환 함수
         function resetAdminForm() {
             document.getElementById('edit-id').value = "";
             document.getElementById('form-mode-title').innerText = "🛠️ 프로젝트 다중 이미지 일괄 등록";
@@ -497,12 +514,10 @@
             tempBase64Images = [];
         }
 
-        // 2. 특정 프로젝트 수정 모드 진입 함수 (수정 취소 버튼 생성 내부 통합 완성형)
         function editProject(index) {
             const target = projectObjects[index];
             if(!target) return;
 
-            // 중복 생성 방지용 선행 삭제
             const existingCancelBtn = document.getElementById('form-cancel-btn');
             if (existingCancelBtn) { existingCancelBtn.remove(); }
 
@@ -515,7 +530,6 @@
             const submitBtn = document.getElementById('form-submit-btn');
             submitBtn.innerText = "수정 완료 및 클라우드 업데이트";
             
-            // 동적 취소 버튼 구성구역 
             const cancelBtn = document.createElement('button');
             cancelBtn.type = "button";
             cancelBtn.id = "form-cancel-btn";
