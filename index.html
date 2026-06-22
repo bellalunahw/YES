@@ -23,26 +23,26 @@
         .hero-text-full h1 { font-size: 3rem; font-weight: 700; line-height: 1.2; letter-spacing: -1px; margin-bottom: 15px; }
         .hero-text-full .sub-slogan { font-size: 1.1rem; color: #666; font-weight: 400; margin-bottom: 25px; }
         .hero-text-full .description { max-width: 600px; margin: 0 auto; font-size: 0.95rem; color: #888; line-height: 1.6; word-break: keep-all; }
-        .about-content { max-width: 800px; margin: 40px auto; text-align: center; }
-        .about-content h2 { font-size: 2rem; letter-spacing: 1px; margin-bottom: 20px; }
-        .about-content p { font-size: 1rem; color: #444; line-height: 1.8; margin-bottom: 15px; word-break: keep-all; }
+        
+        /* ABOUT Section 스타일 고도화 */
+        .about-content { max-width: 1000px; margin: 20px auto; text-align: center; }
+        .about-content h2 { font-size: 2rem; letter-spacing: 2px; margin-bottom: 40px; position: relative; display: inline-block; }
+        .about-content h2::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 30px; height: 1px; background-color: #111; }
+        .about-values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 900px; margin: 70px auto 20px auto; text-align: left; }
+        .value-card { border-top: 1px solid #eee; padding-top: 25px; }
+        
         .projects-container { max-width: 1200px; margin: 0 auto; width: 100%; }
         .section-title { text-align: center; margin-bottom: 40px; }
-        .section-title h2 { font-size: 2rem; letter-spacing: 2px; margin-bottom: 8px; }
-        .section-title p { font-size: 0.9rem; color: #777; }
+        .section-title h2 { font-size: 2rem; letter-spacing: 2px; margin-bottom: 8px; position: relative; display: inline-block; }
+        .section-title p { font-size: 0.9rem; color: #777; margin-top: 10px; }
         .filter-controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 35px; }
         .filter-controls button { font-size: 0.8rem; font-weight: 500; color: #999; background: none; cursor: pointer; padding: 8px 16px; border: 1px solid #e5e5e5; transition: all 0.2s; }
         .filter-controls button.active { background-color: #111111; color: #ffffff; border-color: #111111; }
-        
-        /* 포트폴리오 그리드 및 페이드 효과 트랜지션 추가 */
         .portfolio-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; width: 100%; }
         .grid-item { position: relative; width: 100%; padding-top: 100%; overflow: hidden; display: block; transition: transform 0.4s ease, opacity 0.4s ease; cursor: pointer; }
         .grid-item img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
         .grid-item:hover img { transform: scale(1.04); }
-        
-        /* 💡 카테고리 미매칭 항목을 부드럽게 페이드 아웃 시키는 클래스 (투명도 60% 적용 = opacity 0.4) */
         .grid-item.fade-out-item { opacity: 0.4; }
-        
         .item-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.25s; color: #fff; text-align: center; padding: 15px; }
         .grid-item:hover .item-overlay { opacity: 1; }
         .item-overlay h4 { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 5px; }
@@ -97,7 +97,10 @@
         .info-row .label { font-size: 0.7rem; font-weight: 700; color: #999; letter-spacing: 1px; }
         .info-row .value { font-size: 0.85rem; color: #333; }
         .info-row a { color: inherit; text-decoration: none; }
-        @media (max-width: 900px) { .nav-arrow { font-size: 2rem; } .arrow-left { left: 10px; } .arrow-right { right: 10px; } }
+        @media (max-width: 900px) { 
+            .nav-arrow { font-size: 2rem; } .arrow-left { left: 10px; } .arrow-right { right: 10px; } 
+            .about-values { grid-template-columns: 1fr; gap: 25px; padding: 0 20px; }
+        }
         @media (max-width: 768px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
@@ -126,8 +129,27 @@
     <section id="about" class="page-section">
         <div class="about-content">
             <h2>ABOUT US</h2>
-            <p style="font-weight: 500; margin-bottom: 25px;">"사용자의 삶을 온전히 담아내는 견고한 세계를 설계합니다."</p>
-            <p>단순한 심미적 마감을 넘어 철저한 공간 설계 분석과 정밀한 테크니컬 디테일 도면화를 구현합니다.</p>
+            <p class="about-slogan" style="font-size: 1.3rem; font-weight: 700; line-height: 1.6; margin-bottom: 30px; letter-spacing: -0.5px; word-break: keep-all;">
+                "사용자의 삶을 온전히 담아내는 견고한 세계를 설계합니다."
+            </p>
+            <p class="about-description" style="font-size: 0.95rem; color: #555; line-height: 1.8; max-width: 720px; margin: 0 auto 50px auto; word-break: keep-all;">
+                예스디자인(Artemis Arch)은 단순한 시각적 장식이나 마감을 넘어, 공간이 지녀야 할 본질적인 가치와 흐름을 연구하는 디자인 스튜디오입니다. 특히 상업 공간(F&B)부터 전시, 오피스에 이르기까지 철저한 정밀 분석을 바탕으로 클라이언트의 비즈니스 전략과 브랜드 정체성이 공간 동선에 완벽히 녹아들도록 기획합니다. 우리는 기술적 완성도와 심미성의 균형을 통해 시간의 흐름 속에서도 변함없이 기능하는 견고한 공간을 제안합니다.
+            </p>
+
+            <div class="about-values">
+                <div class="value-card">
+                    <h4 style="font-size: 1rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; color: #111;">01. SPATIAL VALUE</h4>
+                    <p style="font-size: 0.85rem; color: #666; line-height: 1.6; word-break: keep-all;">단순한 도면 작성을 넘어 밀도 높은 공간 계획을 통해 사이트가 가진 잠재 가치를 극대화합니다.</p>
+                </div>
+                <div class="value-card">
+                    <h4 style="font-size: 1rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; color: #111;">02. TECHNICAL DETAIL</h4>
+                    <p style="font-size: 0.85rem; color: #666; line-height: 1.6; word-break: keep-all;">정밀한 2D 테크니컬 디테일 도면화와 3D 시뮬레이션을 통해 시공 오차를 최소화하고 완성도를 높입니다.</p>
+                </div>
+                <div class="value-card">
+                    <h4 style="font-size: 1rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; color: #111;">03. ESSENTIAL DESIGN</h4>
+                    <p style="font-size: 0.85rem; color: #666; line-height: 1.6; word-break: keep-all;">유행에 흔들리지 않는 미니멀하고 직관적인 디자인 철학으로 사용자의 삶과 브랜드의 본질에 집중합니다.</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -248,7 +270,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // 파이어베이스 계정 연동 설정
         const firebaseConfig = {
             apiKey: "AIzaSyDt6s5a8GFu6412Nqtccni8qbqoM-j9aAg",
             authDomain: "yes-design---portfolio.firebaseapp.com",
@@ -270,7 +291,6 @@
         let activeProjectIndex = 0; 
         let currentImageSlideIndex = 0; 
 
-        // 🚀 초기 로드 및 로그인 실시간 감지 감시자 작동
         window.onload = function() {
             database.ref('portfolio_projects').on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -300,7 +320,6 @@
             });
         };
 
-        // 🔐 관리자 인증 요청 함수
         function checkAdminAuth() {
             const email = document.getElementById('login-id').value.trim();
             const pass = document.getElementById('login-pw').value;
@@ -359,7 +378,6 @@
             document.getElementById('login-pw').value = "";
         }
 
-        // 🚀 [핵심 빌드] 최상단 재정렬 + 투명도 60% 페이드 렌더링 로직
         function renderPortfolioGrid() {
             const grid = document.getElementById('portfolio-grid-main');
             if (!grid) return;
@@ -370,10 +388,8 @@
                 return;
             }
 
-            // 배열 사본 생성을 통해 원본 customOrder 정렬 무결성을 해치지 않음
             let displayList = [...projectObjects];
 
-            // 특정 카테고리가 지정되었을 때, 매칭 그룹과 미매칭 그룹으로 분할하여 최상단 병합 정렬
             if (currentFilter !== 'all') {
                 const matchedItems = displayList.filter(item => item.cat === currentFilter);
                 const unmatchedItems = displayList.filter(item => item.cat !== currentFilter);
@@ -384,11 +400,9 @@
                 const gridItem = document.createElement('div');
                 gridItem.className = 'grid-item';
                 
-                // 전역 배열인 projectObjects에서의 원본 실제 인덱스를 추적하여 모달 바인딩 안정성 확보
                 const originalIndex = projectObjects.findIndex(p => p.id === item.id);
                 gridItem.setAttribute('onclick', `openModal(${originalIndex})`);
                 
-                // 💡 조건부 페이드아웃 타겟팅: 선택한 카테고리가 아니면 투명도 클래스 부여
                 if (currentFilter !== 'all' && item.cat !== currentFilter) {
                     gridItem.classList.add('fade-out-item');
                 }
