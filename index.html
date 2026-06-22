@@ -33,10 +33,16 @@
         .filter-controls { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 35px; }
         .filter-controls button { font-size: 0.8rem; font-weight: 500; color: #999; background: none; cursor: pointer; padding: 8px 16px; border: 1px solid #e5e5e5; transition: all 0.2s; }
         .filter-controls button.active { background-color: #111111; color: #ffffff; border-color: #111111; }
+        
+        /* 포트폴리오 그리드 및 페이드 효과 트랜지션 추가 */
         .portfolio-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; width: 100%; }
-        .grid-item { position: relative; width: 100%; padding-top: 100%; overflow: hidden; display: block; transition: all 0.3s ease; cursor: pointer; }
+        .grid-item { position: relative; width: 100%; padding-top: 100%; overflow: hidden; display: block; transition: transform 0.4s ease, opacity 0.4s ease; cursor: pointer; }
         .grid-item img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
         .grid-item:hover img { transform: scale(1.04); }
+        
+        /* 💡 카테고리 미매칭 항목을 부드럽게 페이드 아웃 시키는 클래스 (투명도 60% 적용 = opacity 0.4) */
+        .grid-item.fade-out-item { opacity: 0.4; }
+        
         .item-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.25s; color: #fff; text-align: center; padding: 15px; }
         .grid-item:hover .item-overlay { opacity: 1; }
         .item-overlay h4 { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 5px; }
@@ -69,8 +75,6 @@
         .file-count-info { font-size: 0.8rem; color: #0066cc; font-weight: 500; margin-top: 2px; }
         .submit-btn { background: #111; color: #fff; border: none; padding: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 500; width: 100%; margin-top: 10px; }
         .submit-btn:disabled { background: #ccc; cursor: wait; }
-        
-        /* 테이블 정렬 버튼 디자인 */
         .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
         .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
         .admin-table th { background: #f4f4f4; font-weight: 700; }
@@ -131,7 +135,7 @@
         <div class="projects-container">
             <div class="section-title">
                 <h2>OUR PROJECTS</h2>
-                <p>원하시는 공간 카테고리를 선택하시면 해당하는 프로젝트가 우선 정렬됩니다.</p>
+                <p>원하시는 공간 카테고리를 선택하시면 해당하는 프로젝트가 우선 정렬되며, 그 외 항목은 투명하게 페이드 처리됩니다.</p>
             </div>
             <div class="filter-controls" id="filter-tab-container">
                 <button class="active" onclick="filterCategory('all')">ALL</button>
@@ -268,7 +272,6 @@
 
         // 🚀 초기 로드 및 로그인 실시간 감지 감시자 작동
         window.onload = function() {
-            // 한 번만 데이터를 읽어오는 대신 실시간 리스너 유지하되, 정렬 기준을 customOrder 순으로 변경
             database.ref('portfolio_projects').on('value', (snapshot) => {
                 const data = snapshot.val();
                 projectObjects = [];
@@ -280,7 +283,6 @@
                             ...data[key]
                         });
                     });
-                    // customOrder 값이 있으면 그것을 기준으로 오름차순(0, 1, 2...), 없으면 옛날 기준(timestamp 내림차순) 분기 처리
                     projectObjects.sort((a, b) => {
                         const orderA = a.customOrder !== undefined ? a.customOrder : 999999;
                         const orderB = b.customOrder !== undefined ? b.customOrder : 999999;
@@ -337,7 +339,6 @@
                 });
         }
 
-        // 🔐 로그아웃 함수
         function adminLogout() {
             if(confirm('로그아웃 하시겠습니까?')) {
                 auth.signOut().then(() => {
@@ -358,23 +359,40 @@
             document.getElementById('login-pw').value = "";
         }
 
-        // 메인 화면 포트폴리오 그리드 렌더링
+        // 🚀 [핵심 빌드] 최상단 재정렬 + 투명도 60% 페이드 렌더링 로직
         function renderPortfolioGrid() {
             const grid = document.getElementById('portfolio-grid-main');
             if (!grid) return;
             grid.innerHTML = '';
             
             if(projectObjects.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:50px; color:#999; font-size:0.9rem;">등록된 포트폴리오가 없습니다. 관리자 모드에서 첫 자료를 등록해 보세요!</div>';
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:50px; color:#999; font-size:0.9rem;">등록된 포트폴리오가 없습니다.</div>';
                 return;
             }
 
-            // 필터링 처리 후 출력은 현재 projectObjects에 들어있는 순서(customOrder 정렬 상태) 그대로 보장됨
-            projectObjects.forEach((item, index) => {
-                if (currentFilter !== 'all' && item.cat !== currentFilter) return;
+            // 배열 사본 생성을 통해 원본 customOrder 정렬 무결성을 해치지 않음
+            let displayList = [...projectObjects];
+
+            // 특정 카테고리가 지정되었을 때, 매칭 그룹과 미매칭 그룹으로 분할하여 최상단 병합 정렬
+            if (currentFilter !== 'all') {
+                const matchedItems = displayList.filter(item => item.cat === currentFilter);
+                const unmatchedItems = displayList.filter(item => item.cat !== currentFilter);
+                displayList = [...matchedItems, ...unmatchedItems];
+            }
+
+            displayList.forEach((item) => {
                 const gridItem = document.createElement('div');
                 gridItem.className = 'grid-item';
-                gridItem.setAttribute('onclick', `openModal(${index})`);
+                
+                // 전역 배열인 projectObjects에서의 원본 실제 인덱스를 추적하여 모달 바인딩 안정성 확보
+                const originalIndex = projectObjects.findIndex(p => p.id === item.id);
+                gridItem.setAttribute('onclick', `openModal(${originalIndex})`);
+                
+                // 💡 조건부 페이드아웃 타겟팅: 선택한 카테고리가 아니면 투명도 클래스 부여
+                if (currentFilter !== 'all' && item.cat !== currentFilter) {
+                    gridItem.classList.add('fade-out-item');
+                }
+
                 const mainThumb = (item.imgs && item.imgs.length > 0) ? item.imgs[0] : 'https://placehold.co/600x600?text=No+Image';
                 gridItem.innerHTML = `
                     <img src="${mainThumb}" onerror="this.src='https://placehold.co/600x600?text=Image+Error'" alt="${item.title}">
@@ -496,7 +514,6 @@
 
             } else {
                 const newProjectRef = database.ref('portfolio_projects').push();
-                // 신규 등록 시 리스트의 맨 마지막 순서 순번을 자동 부여합니다.
                 const nextOrderIndex = projectObjects.length; 
                 
                 newProjectRef.set({
@@ -590,26 +607,21 @@
             }
         }
 
-        // 🔄 [추가] 순서 변경을 위한 위/아래 이동 함수 (로컬 가상 이동)
         function moveOrder(index, direction) {
             const targetIndex = index + direction;
-            if (targetIndex < 0 || targetIndex >= projectObjects.length) return; // 범위를 벗어나면 작동 차단
+            if (targetIndex < 0 || targetIndex >= projectObjects.length) return; 
 
-            // 배열 내 원소 스왑(위치 교환)
             const temp = projectObjects[index];
             projectObjects[index] = projectObjects[targetIndex];
             projectObjects[targetIndex] = temp;
 
-            // 바뀐 로컬 배열 순서에 기반해 실시간으로 관리자 테이블 화면만 재구성 (최종 저장은 버튼을 따로 클릭)
             renderAdminTable();
         }
 
-        // 💾 [추가] 최종 재정렬된 순번을 Firebase 클라우드에 배치 업데이트 일괄 처리
         function saveCustomOrder() {
             if (projectObjects.length === 0) return;
             
             const updates = {};
-            // 현재 재정렬된 projectObjects 배열의 순서 그대로 0번부터 순번(customOrder)을 새로 매깁니다.
             projectObjects.forEach((item, index) => {
                 updates[`/portfolio_projects/${item.id}/customOrder`] = index;
             });
@@ -623,7 +635,6 @@
                 });
         }
 
-        // 관리자 화면 전체 테이블 리스트 구성
         function renderAdminTable() {
             const tbody = document.getElementById('admin-table-body');
             if (!tbody) return;
@@ -636,7 +647,6 @@
                     item.imgs.forEach(imgUrl => { thumbsHTML += `<img src="${imgUrl}" class="admin-thumb">`; });
                 }
                 
-                // 순서 제어용 ▲, ▼ 버튼 생성 로직 
                 tr.innerHTML = `
                     <td>
                         <button class="action-btn order-btn" onclick="moveOrder(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>▲</button>
